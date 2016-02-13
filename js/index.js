@@ -1,7 +1,10 @@
 var root = this;
+var ua = root.navigator.userAgent;
+var landingPage = document.getElementById( 'landing_page' );
 var launchButton = document.getElementById( 'launch_button' );
 var popupWindow = document.getElementById( 'popup_window' );
-var ua = root.navigator.userAgent;
+var popupCloseButton = document.getElementById( 'popup_close_button' );
+var tryAnywayLink = document.getElementById( 'try_anyway' );
 
   	var has = {
 
@@ -35,11 +38,18 @@ var ua = root.navigator.userAgent;
 
 document.addEventListener('DOMContentLoaded', function() {
 
+	if (has.mobile) {
+        landingPage.className += ' mobile';
+	} else {
+		landingPage.className += ' desktop';
+	}
+
 	var canRun = true;
 	if (canRun) {
       if (!has.mobile) {
       	launchButton.addEventListener( 'click', onOpenPopupClicked, true );
-
+      	popupCloseButton.addEventListener( 'click', onClosePopupClicked, true );
+        tryAnywayLink.addEventListener( 'click', onLaunchClicked, true );
       } else {
       	launchButton.addEventListener( 'click', onLaunchClicked, true );
       }

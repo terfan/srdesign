@@ -103,8 +103,8 @@ html, body {
     #landing_page #popup_window #popup_box {
       position: absolute;
       background-color: #fff;
-      width: 300px;
-      height: 340px;
+      width: 340px;
+      height: 370px;
       margin-left: -150px;
       margin-top: -170px;
       top: 50%;
@@ -130,14 +130,14 @@ html, body {
           font-size: 16px; }
       #landing_page #popup_window #popup_box #popup_close_button {
         font-size: 40px;
-        width: 30px;
-        height: 40px;
+        width: 20px;
+        height: 30px;
         position: absolute;
-        top: 10px;
-        right: 12px;
+        top: 15px;
+        right: 17px;
         text-align: center;
         cursor: pointer;
-        background: url('../images/landingPage/ic_close_black_48dp.png') no-repeat center center;
+        background: url('../images/close.png') no-repeat center center;
         background-size: contain; }
 
 .paging_block {

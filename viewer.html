@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Cardboard Example</title>
+    <title>CardboardCanvas Viewer</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
@@ -21,10 +21,10 @@
   <body>
     <div id="example"></div>
 
-  <script src="js/third-party/threejs/three.js"></script>
-  <script src="js/third-party/threejs/StereoEffect.js"></script>
-  <script src="js/third-party/threejs/DeviceOrientationControls.js"></script>
-  <script src="js/third-party/threejs/OrbitControls.js"></script>
+  <script src="js/threejs/three.js"></script>
+  <script src="js/threejs/StereoEffect.js"></script>
+  <script src="js/threejs/DeviceOrientationControls.js"></script>
+  <script src="js/threejs/OrbitControls.js"></script>
 
   <script>
     var camera, scene, renderer;
@@ -80,7 +80,7 @@
       scene.add(light);
 
       var texture = THREE.ImageUtils.loadTexture(
-        'textures/patterns/checker.png'
+        'images/textures/patterns/checker.png'
       );
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
