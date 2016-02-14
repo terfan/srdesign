@@ -70,17 +70,17 @@ html, body {
         #landing_page .content #viewer_block #intro_block h1 {
           font-size: 24px;
           line-height: 30px; }
-      #landing_page .content #viewer_block #launch_button_block .button_container #launch_button {
+      #landing_page .content #viewer_block .launch_button_block .button_container .launch_button {
         background-color: #0092ed; }
-        #landing_page .content #viewer_block #launch_button_block .button_container #launch_button:hover {
+        #landing_page .content #viewer_block .launch_button_block .button_container .launch_button:hover {
           background-color: #59bae9; }
-      #landing_page .content #viewer_block #launch_button_block .button_container #launch_button.disabled {
+      #landing_page .content #viewer_block .launch_button_block .button_container .launch_button.disabled {
         display: none;
         color: #333;
         background-color: #666; }
-        #landing_page .content #viewer_block #launch_button_block .button_container #launch_button.disabled:hover {
+        #landing_page .content #viewer_block .launch_button_block .button_container .launch_button.disabled:hover {
           background-color: #666; }
-      #landing_page .content #viewer_block #launch_button_block .button_container .loading_message {
+      #landing_page .content #viewer_block .launch_button_block .button_container .loading_message {
         display: none; }
     #landing_page .content #footer_block {
       position: relative;
