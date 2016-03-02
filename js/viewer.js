@@ -154,15 +154,13 @@ function draw(line) {
   });
 
   var point = new THREE.Vector3();
-/*geometry.vertices.push(
-  new THREE.Vector3( 0, 0, 0 )
-);*/
+
   for (var i = 0; i < 2; i++) {
     point.x = line[i].x * 10; // note: window.innerWidth and innerHeight are too big to scale by...
     point.y = line[i].y * 10;
     point.z = 0;
 
-    console.log("added point at "+point.x + " "+point.y + " "+point.z);
+    //console.log("added point at "+point.x + " "+point.y + " "+point.z);
 
     geometry.vertices.push( point );
   }
