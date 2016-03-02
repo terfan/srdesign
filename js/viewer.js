@@ -1,3 +1,13 @@
+/***************** SOCKET CODE ******************/
+
+var socket  = io.connect();
+
+socket.on('draw_line', function (data) {
+  var line = data.line;
+    //console.log("receiving signal from drawing tool "+line);
+  draw(line);
+});
+
 /***************** THREE JS ******************/
 
 var camera, scene, renderer;
@@ -7,12 +17,12 @@ var element, container;
 var clock = new THREE.Clock();
 
 init();
-animate();
+//animate();
 
 function init() {
   renderer = new THREE.WebGLRenderer();
   element = renderer.domElement;
-  container = document.getElementById('example');
+  container = document.getElementById('canvas');
   container.appendChild(element);
 
   effect = new THREE.StereoEffect(renderer);
@@ -20,7 +30,7 @@ function init() {
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
-  camera.position.set(0, 10, 0);
+  camera.position.set(0, 10, 5);
   scene.add(camera);
 
   controls = new THREE.OrbitControls(camera, element);
@@ -52,9 +62,7 @@ function init() {
   var light = new THREE.HemisphereLight(0x777777, 0x000000, 0.6);
   scene.add(light);
 
-  var texture = THREE.ImageUtils.loadTexture(
-    'images/textures/patterns/checker.png'
-    );
+  var texture = new THREE.TextureLoader().load('images/textures/patterns/checker.png');
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat = new THREE.Vector2(50, 50);
@@ -76,6 +84,8 @@ function init() {
 
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
+
+  setInterval(render, 1000/30);
 }
 
 function resize() {
@@ -97,7 +107,17 @@ function update(dt) {
   controls.update(dt);
 }
 
-function render(dt) {
+function render() {
+  geometry.verticesNeedUpdate = true;
+
+    var material = new THREE.LineBasicMaterial({
+    color: 0x0000ff,
+    linewidth: 3
+  });
+  for (var i = 0; i < points.length; i++) {
+    var line = new THREE.Line( geometry, material );
+    scene.add(line);
+  }
   effect.render(scene, camera);
 }
 
@@ -118,4 +138,37 @@ function fullscreen() {
   } else if (container.webkitRequestFullscreen) {
     container.webkitRequestFullscreen();
   }
+}
+
+/***************** DRAW ******************/
+
+var points = [];
+var geometry = new THREE.Geometry();
+
+function draw(line) {
+  var color = '0x' + line[2].substring(1); // reformat color to be in correct format for three.js
+
+  var material = new THREE.LineBasicMaterial({
+    color: 0x0000ff,
+    linewidth: 3
+  });
+
+  var point = new THREE.Vector3();
+/*geometry.vertices.push(
+  new THREE.Vector3( 0, 0, 0 )
+);*/
+  for (var i = 0; i < 2; i++) {
+    point.x = line[i].x * 10; // note: window.innerWidth and innerHeight are too big to scale by...
+    point.y = line[i].y * 10;
+    point.z = 0;
+
+    console.log("added point at "+point.x + " "+point.y + " "+point.z);
+
+    geometry.vertices.push( point );
+  }
+
+  //var line = new THREE.Line( geometry, material );
+  //scene.add(line);
+  points.push(geometry);
+  render();
 }
