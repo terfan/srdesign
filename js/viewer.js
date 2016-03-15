@@ -184,15 +184,12 @@ function draw(line) {
   p2.y = line[1].y;
   p2.z = line[1].z;
 
-  if (!p2.equals(prevPoint)) {
-    //geometry = new THREE.Geometry();
-    console.log('detected new line');
-  }
+  if (p2.equals(prevPoint)) {
 
-  for (var i = 0; i < 2; i++) {
-    point.x = line[i].x; 
-    point.y = line[i].y;
-    point.z = 0;
+    for (var i = 0; i < 2; i++) {
+      point.x = line[i].x; 
+      point.y = line[i].y;
+      point.z = 0;
 
     //console.log("added point at "+point.x + " "+point.y + " "+point.z);
 
@@ -206,15 +203,22 @@ function draw(line) {
   points.push( geometry );
 
   materials.push(material);
-  
-  for (var i = 0; i < points.length; i++) {
-    var line = new THREE.Line( points[i], materials[i] );
+  //console.log('LOOK HERE '+points.length);
+  //for (var i = 0; i < points.length; i++) {
+    //var line = new THREE.Line( points[i], materials[i] );
+    var line = new THREE.Line( geometry, material );
     line.scale.set(scale_x, scale_y, scale_z);
     line.rotateX(Math.PI);
     line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);
     scene.add(line);
-  }
+  //}
   render();
+}
+else {
+  console.log('detected new line');
+  geometry = new THREE.Geometry();
+}
 
-  prevPoint = p1;
+prevPoint = p1;
+
 }
