@@ -165,6 +165,7 @@ function fullscreen() {
 var points = [];
 var materials = [];
 var geometry = new THREE.Geometry();
+var prevPoint = new THREE.Vector3();
 
 function draw(line) {
   var material = new THREE.LineBasicMaterial({
@@ -173,6 +174,20 @@ function draw(line) {
   });
 
   var point = new THREE.Vector3();
+
+  var p1 = new THREE.Vector3();
+  p1.x = line[0].x;
+  p1.y = line[0].y;
+  p1.z = line[0].z;
+  var p2 = new THREE.Vector3();
+  p2.x = line[1].x;
+  p2.y = line[1].y;
+  p2.z = line[1].z;
+
+  if (!p2.equals(prevPoint)) {
+    //geometry = new THREE.Geometry();
+    console.log('detected new line');
+  }
 
   for (var i = 0; i < 2; i++) {
     point.x = line[i].x; 
@@ -200,4 +215,6 @@ function draw(line) {
     scene.add(line);
   }
   render();
+
+  prevPoint = p1;
 }
