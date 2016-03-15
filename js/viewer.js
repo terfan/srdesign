@@ -30,16 +30,17 @@ function init() {
   scene = new THREE.Scene();
 
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
-  camera.position.set(0, 10, 20); // TODO: play around with this
+  camera.position.set(20, 20, 40); // TODO: play around with camera stuff
   scene.add(camera);
 
   controls = new THREE.OrbitControls(camera, element);
   controls.rotateUp(Math.PI / 4);
-  controls.target.set(
+  /*controls.target.set(
     camera.position.x + 0.1,
     camera.position.y,
     camera.position.z
-    );
+    );*/
+controls.target.set(camera.position.x, camera.position.y, camera.position.z + 0.1);
   controls.noZoom = true;
   controls.noPan = true;
 
