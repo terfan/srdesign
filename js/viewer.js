@@ -132,12 +132,8 @@ function update(dt) {
 }
 
 function render() {
-  // geometry.verticesNeedUpdate = true; // unnecessary?
+  geometry.verticesNeedUpdate = true; // unnecessary?
 
-  /*for (var i = 0; i < points.length; i++) {
-    var line = new THREE.Line( points[i], materials[i] );
-    scene.add(line);
-  }*/
   effect.render(scene, camera);
 }
 
@@ -184,41 +180,38 @@ function draw(line) {
   p2.y = line[1].y;
   p2.z = line[1].z;
 
-  if (p2.equals(prevPoint)) {
+  if (p2.equals(prevPoint)) { // continuing a line
 
     for (var i = 0; i < 2; i++) {
       point.x = line[i].x; 
       point.y = line[i].y;
       point.z = 0;
+      geometry.vertices.push( point );
+    }
 
-    //console.log("added point at "+point.x + " "+point.y + " "+point.z);
+    var scale_x = window.innerWidth / 10;
+    var scale_y = window.innerHeight / 10;
+    var scale_z = 1; // TODO
 
-    geometry.vertices.push( point );
-  }
+    points.push( geometry );
 
-  var scale_x = window.innerWidth / 10;
-  var scale_y = window.innerHeight / 10;
-  var scale_z = 1; // TODO
-
-  points.push( geometry );
-
-  materials.push(material);
-  //console.log('LOOK HERE '+points.length);
-  //for (var i = 0; i < points.length; i++) {
-    //var line = new THREE.Line( points[i], materials[i] );
+    materials.push(material);
+    //console.log('LOOK HERE '+points.length);
+    /*for (var i = 0; i < points.length; i++) {
+    var line = new THREE.Line( points[i], materials[i] );*/
     var line = new THREE.Line( geometry, material );
     line.scale.set(scale_x, scale_y, scale_z);
     line.rotateX(Math.PI);
     line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);
     scene.add(line);
-  //}
-  render();
-}
-else {
-  console.log('detected new line');
-  geometry = new THREE.Geometry();
-}
+    //console.log("added a line");
+    //}
+    //render();
+  }
+  else {
+    console.log('detected new line');
+    geometry = new THREE.Geometry();
+  }
 
-prevPoint = p1;
-
+  prevPoint = p1;
 }
