@@ -17,7 +17,7 @@ var element, container;
 var clock = new THREE.Clock();
 
 init();
-//animate();
+animate();
 
 function init() {
   renderer = new THREE.WebGLRenderer();
@@ -25,7 +25,7 @@ function init() {
   container = document.getElementById('canvas');
   container.appendChild(element);
 
-  effect = new THREE.StereoEffect(renderer);
+  effect = new THREE.CardboardEffect(renderer);
 
   scene = new THREE.Scene();
 
@@ -34,15 +34,10 @@ function init() {
   scene.add(camera);
 
   controls = new THREE.OrbitControls(camera, element);
-  controls.rotateUp(Math.PI / 4);
-  /*controls.target.set(
-    camera.position.x + 0.1,
-    camera.position.y,
-    camera.position.z
-    );*/
-controls.target.set(camera.position.x, camera.position.y, camera.position.z + 0.1);
-  controls.noZoom = true;
-  controls.noPan = true;
+  //controls.rotateUp(Math.PI / 4);
+  controls.target.set(camera.position.x, camera.position.y, camera.position.z - 5);
+  controls.enableZoom = false;
+  controls.enablePan = false;
 
   function setOrientationControls(e) {
     if (!e.alpha) {
@@ -83,7 +78,7 @@ controls.target.set(camera.position.x, camera.position.y, camera.position.z + 0.
   mesh.rotation.x = -Math.PI / 2;
   scene.add(mesh);
 
-  /** TESTING **/
+  /** AXES FOR TESTING **/
     var material2 = new THREE.LineBasicMaterial({
     color: 0x0000ff,
     linewidth: 5
@@ -104,12 +99,12 @@ py.vertices.push(
     var yaxis = new THREE.Line( py, material2 );
     scene.add(yaxis);
 
-  /** TESTING **/
+  /** END OF AXES FOR TESTING **/
 
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
 
-  setInterval(render, 1000/30);
+  //setInterval(render, 1000/30);
 }
 
 function resize() {
@@ -132,7 +127,7 @@ function update(dt) {
 }
 
 function render() {
-  geometry.verticesNeedUpdate = true; // unnecessary?
+  //geometry.verticesNeedUpdate = true; // unnecessary?
 
   effect.render(scene, camera);
 }
