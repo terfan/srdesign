@@ -133,12 +133,32 @@ py.vertices.push(
 function createMenu() {
   group = new THREE.Object3D();
 
+  var width = 15;
   var height = 7;
   var tz = Math.round( ( height / 2) / Math.tan( Math.PI / sides ) );
   for (i = 0; i < sides; i++) {
+
+    var bitmap = document.createElement('canvas');
+    var ctx = bitmap.getContext('2d');
+    ctx.width = width * 20;
+    ctx.height = height * 20;
+
+    ctx.font = 'normal 50px Helvetica';
     var deg = i * 360 / sides;
-    var panelMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color("hsl(" + deg + ", 80%, 50%)"), side: THREE.DoubleSide, overdraw: 0.5 });
-    var plane = new THREE.Mesh(new THREE.PlaneGeometry( 15, height ), panelMaterial);
+    ctx.fillStyle = "hsl(" + deg + ", 80%, 50%)";
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('hello', ctx.width / 2, ctx.height / 2);
+
+    // canvas contents will be used for a texture
+    var texture1 = new THREE.Texture(bitmap) 
+    texture1.needsUpdate = true;
+
+    var panelMaterial = new THREE.MeshBasicMaterial({ map: texture1, side: THREE.DoubleSide, overdraw: 0.5 });
+    //panelMaterial.transparent = true;
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry( width, height ), panelMaterial);
     plane.overdraw = true;
     plane.rotateX( 2 * Math.PI * i / sides );
     plane.translateZ( tz );
