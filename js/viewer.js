@@ -134,31 +134,18 @@ function createMenu() {
   group = new THREE.Object3D();
 
   var height = 7;
-  //var tz = Math.round( ( height / 2) / Math.tan( Math.PI / sides ) );
-  var tz = (height / 2) / Math.tan( Math.PI / sides );
-  console.log('r = '+tz);
+  var tz = Math.round( ( height / 2) / Math.tan( Math.PI / sides ) );
   for (i = 0; i < sides; i++) {
     var deg = i * 360 / sides;
     var panelMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color("hsl(" + deg + ", 80%, 50%)"), side: THREE.DoubleSide, overdraw: 0.5 });
     var plane = new THREE.Mesh(new THREE.PlaneGeometry( 15, height ), panelMaterial);
     plane.overdraw = true;
-    var angle = 2*Math.PI * i/sides;
-    plane.rotation.x = -angle - (Math.PI/2);
-    //plane.rotateX(-angle - (Math.PI/2));
-    console.log(-angle - (Math.PI/2));
-    //plane.position = new THREE.Vector3(0, tz*Math.cos(angle), tz*Math.sin(angle));
-    //plane.translateY(tz*Math.sin(angle));
-    //plane.translateZ(tz*Math.cos(-angle - (Math.PI/2)));
-    //plane.translateOnAxis(new THREE.Vector3(0, 1, 0), tz*Math.cos(angle));
-    //plane.translateOnAxis(new THREE.Vector3(0,0,-1), tz*Math.sin(angle));
-    /*plane.translateZ( tz );
-    plane.rotateX( 2 * Math.PI * i / sides );*/
+    plane.rotateX( 2 * Math.PI * i / sides );
     plane.translateZ( tz );
-    console.log(plane.position);
     group.add(plane);
   }
 
-  group.position.set(0, 0, 5);
+  group.position.set(0, 0, 10);
   scene.add(group);
 
   // create the plane mesh
