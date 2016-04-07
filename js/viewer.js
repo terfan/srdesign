@@ -14,8 +14,13 @@ var camera, scene, renderer;
 var scene2, renderer2;
 var effect, controls;
 var element, container;
-var group;
+var menuGroup;
 var sides = 5;
+var menuText = ['Brush', 'Exit', 'Undo', 'Thickness', 'Color'];
+var menuButtons = [];
+var textures = []; // normal button textures
+var selectedTextures = []; // textures to use when button is selected
+var selectedButton;
 
 var clock = new THREE.Clock();
 
@@ -29,20 +34,6 @@ function init() {
   container.appendChild(element);
 
   scene = new THREE.Scene();
-
-  // CSS3D Scene
-  scene2 = new THREE.Scene();
-
-// Renderer
-  renderer2 = new THREE.CSS3DRenderer();
-  renderer2.setSize(window.innerWidth, window.innerHeight);
-  renderer2.domElement.style.position = 'absolute';
-  renderer2.domElement.style.top = 0;
-  document.body.appendChild(renderer2.domElement);
-  //container.appendChild(renderer2.domElement);
-
-renderer.domElement.style.zIndex  = 1;
-//renderer2.domElement.appendChild( renderer.domElement );
 
   effect = new THREE.CardboardEffect(renderer);
 
@@ -97,7 +88,7 @@ renderer.domElement.style.zIndex  = 1;
   //scene.add(mesh);
 
   /** AXES FOR TESTING **/
-    var material2 = new THREE.LineBasicMaterial({
+    /*var material2 = new THREE.LineBasicMaterial({
     color: 0x0000ff,
     linewidth: 5
   });
@@ -115,86 +106,21 @@ py.vertices.push(
   new THREE.Vector3( 0, 50, 0 )
 );
     var yaxis = new THREE.Line( py, material2 );
-    scene.add(yaxis);
+    scene.add(yaxis);*/
 
   /** END OF AXES FOR TESTING **/
 
-    /*** CSS3D ***/
+  menuGroup = new THREE.Object3D();
   createMenu();
+  menuGroup.position.set(0, 0, 10);
+  scene.add(menuGroup);
+  highlightButton(4, true);
 
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
 
   //setInterval(render, 1000/30);
 
-}
-
-/*** CAROUSEL **/
-function createMenu() {
-  group = new THREE.Object3D();
-
-  var width = 15;
-  var height = 7;
-  var tz = Math.round( ( height / 2) / Math.tan( Math.PI / sides ) );
-  for (i = 0; i < sides; i++) {
-
-    var bitmap = document.createElement('canvas');
-    var ctx = bitmap.getContext('2d');
-    ctx.width = width * 20;
-    ctx.height = height * 20;
-
-    ctx.font = 'normal 50px Helvetica';
-    var deg = i * 360 / sides;
-    ctx.fillStyle = "hsl(" + deg + ", 80%, 50%)";
-    ctx.fillRect(0, 0, ctx.width, ctx.height);
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('hello', ctx.width / 2, ctx.height / 2);
-
-    // canvas contents will be used for a texture
-    var texture1 = new THREE.Texture(bitmap) 
-    texture1.needsUpdate = true;
-
-    var panelMaterial = new THREE.MeshBasicMaterial({ map: texture1, side: THREE.DoubleSide, overdraw: 0.5 });
-    //panelMaterial.transparent = true;
-    var plane = new THREE.Mesh(new THREE.PlaneGeometry( width, height ), panelMaterial);
-    plane.overdraw = true;
-    plane.rotateX( 2 * Math.PI * i / sides );
-    plane.translateZ( tz );
-    group.add(plane);
-  }
-
-  group.position.set(0, 0, 10);
-  scene.add(group);
-
-  // create the plane mesh
-  /*var material = new THREE.MeshBasicMaterial();
-  var geometry = new THREE.PlaneGeometry();
-  var planeMesh= new THREE.Mesh( geometry, material );
-  //planeMesh.scale_x = 0.01;
-  //planeMesh.scale_y = 0.01;
-  // add it to the WebGL scene
-  scene.add(planeMesh);*/
-
-  // create the dom Element
-  /*var element = document.createElement( 'div' );
-  element.innerHTML = 'Plain text inside a div.';
-  element.style.width = "200px";
-  element.style.height = "100px";
-  element.style.color = "#fff";
-
-  // create the object3d for this element
-  var cssObject = new THREE.CSS3DObject( element );
-  // we reference the same position and rotation 
-  cssObject.position = planeMesh.position;
-  cssObject.rotation = planeMesh.rotation;
-  cssObject.scale.x = 0.2;
-  cssObject.scale.y = 0.2;
-  // add it to the css scene
-  //scene2.add(cssObject);
-  //console.log(renderer2);
-  scene.add(cssObject);*/
 }
 
 function resize() {
@@ -219,7 +145,6 @@ function update(dt) {
 function render() {
   //geometry.verticesNeedUpdate = true; // unnecessary?
   
-  renderer2.render(scene2, camera); // comment out and text won't appear
   effect.render(scene, camera);
 }
 
@@ -241,6 +166,81 @@ function fullscreen() {
     container.webkitRequestFullscreen();
   }
 }
+
+/*********************** CAROUSEL UI ***********************/
+
+function createMenu() {
+
+  var width = 15;
+  var height = 7;
+  var tz = Math.round( ( height / 2) / Math.tan( Math.PI / sides ) );
+  for (i = 0; i < sides; i++) {
+
+    var bitmap = document.createElement('canvas');
+    var ctx = bitmap.getContext('2d');
+    ctx.width = width * 20;
+    ctx.height = height * 20;
+    ctx.font = 'normal 50px Helvetica';
+    var deg = i * 360 / sides;
+    ctx.fillStyle = 'hsl(' + deg + ', 80%, 25%)';
+    ctx.fillRect(0, 0, ctx.width, ctx.height);
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(menuText[i], ctx.width / 2, ctx.height / 2);
+    
+    // Create highlighted version of texture
+    var bitmap2 = document.createElement('canvas');
+    var ctx2 = bitmap2.getContext('2d');
+    ctx2.width = width * 20;
+    ctx2.height = height * 20;
+    ctx2.font = 'normal 50px Helvetica';
+    ctx2.fillStyle = 'hsl(' + deg + ', 80%, 60%)';
+    ctx2.fillRect(0, 0, ctx.width, ctx.height);
+    ctx2.fillStyle = 'white';
+    ctx2.textAlign = 'center';
+    ctx2.textBaseline = 'middle';
+    ctx2.fillText(menuText[i], ctx.width / 2, ctx.height / 2);
+
+    // canvas contents will be used for a texture
+    var texture1 = new THREE.Texture(bitmap);
+    var texture2 = new THREE.Texture(bitmap2);
+    texture1.needsUpdate = true;
+    texture2.needsUpdate = true;
+    textures[i] = texture1;
+    selectedTextures[i] = texture2;
+
+    var panelMaterial = new THREE.MeshBasicMaterial({ map: texture1, side: THREE.DoubleSide, overdraw: 0.5 });
+    panelMaterial.needsUpdate = true;
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry( width, height ), panelMaterial);
+    plane.overdraw = true;
+    plane.rotateX( 2 * Math.PI * i / sides );
+    plane.translateZ( tz );
+    menuGroup.add(plane);
+
+    menuButtons[i] = plane;
+  }
+
+}
+
+function highlightButton(id, highlight) { // true to highlight, false to unhighlight
+  var button1 = menuButtons[id];
+  console.log(button1);
+  var button2 = selectedButton;
+
+  if (highlight) {
+    button1.material.map = selectedTextures[id];
+    if (selectedButton) {
+      button2.material.map = textures[id];
+    }
+    selectedButton = button1;
+  } else {
+    button1.material.map = textures[id];
+    selectedButton = null;
+  }
+
+}
+
 
 /***************** DRAW ******************/
 
