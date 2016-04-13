@@ -66,7 +66,7 @@ function init() {
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
   camera.position.set(10, 20, 40); // TODO: play around with camera stuff
 
-  /*********************** RETICULUM **************************/
+  /*********************** RETICLE **************************/
   Reticulum.init(camera, {
     proximity: false,
     clickevents: true,
@@ -77,7 +77,7 @@ function init() {
         restPoint: 5, //Defines the reticle's resting point when no object has been targeted
         color: 0xcc00cc,
         innerRadius: 0.0001,
-        outerRadius: 0.005,
+        outerRadius: 0.008,
         hover: {
           color: 0x00cccc,
           innerRadius: 0.02,
@@ -87,7 +87,7 @@ function init() {
           }
         },
         fuse: {
-          visible: true,
+          visible: false,
           duration: 2.5,
           color: 0x00fff6,
           innerRadius: 0.045,
@@ -96,7 +96,7 @@ function init() {
         clickCancelFuse: false //If users clicks on targeted object fuse is canceled
       }
     });
-  /*********************** END OF RETICULUM **************************/
+  /*********************** END OF RETICLE **************************/
 
   scene.add(camera);
 
@@ -279,21 +279,23 @@ function createMenu() {
     plane.overdraw = true;
     plane.rotateX( 2 * Math.PI * i / sides );
     plane.translateZ( tz );
+    plane.userData.id = i;
     
     Reticulum.add( plane, {
       onGazeOver: function(){
         // do something when user targets object
         //this.material.color.setHSL(deg, 0.8, 1);
-        this.material.map = texture2;
+        this.material.map = selectedTextures[this.userData.id];
       },
       onGazeOut: function(){
         // do something when user moves reticle off targeted object
-        this.material.color.setHSL(deg, 0.8, 0.25);
+        //this.material.color.setHSL(deg, 0.8, 0.25);
+        this.material.map = textures[this.userData.id];
       },
-      /*onGazeLong: function(){
+      onGazeLong: function(){
         // do something user targetes object for specific time
         //this.material.color.setHex( 0x0000cc );
-      },*/
+      },
       onGazeClick: function(){
         // have the object react when user clicks / taps on targeted object
         //this.material.color.setHex( 0x00cccc * Math.random() );
