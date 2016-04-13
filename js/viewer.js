@@ -17,10 +17,35 @@ var element, container;
 var menuGroup;
 var sides = 5;
 var menuText = ['Brush', 'Exit', 'Undo', 'Thickness', 'Color'];
-var menuButtons = [];
+var menuButtons = []; // geometry planes
 var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
 var selectedButton;
+var reticle;
+
+var buttons = {
+  'Brush': function () {
+    // TODO: brush styles
+    console.log("brush menu item clicked");
+  },
+  'Exit': function () {
+    // TODO: show warning message and/or option to save?
+    window.history.back();
+  },
+  'Undo': function () {
+    // TODO: undo
+    console.log("undo menu item clicked");
+  },
+  'Thickness': function () {
+    // TODO: brush thickness
+    console.log("thickness menu item clicked");
+  },
+  'Color': function () {
+    // TODO: color
+    console.log("color menu item clicked");
+  }
+
+}
 
 var clock = new THREE.Clock();
 
@@ -39,7 +64,40 @@ function init() {
 
 
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
-  camera.position.set(20, 20, 40); // TODO: play around with camera stuff
+  camera.position.set(10, 20, 40); // TODO: play around with camera stuff
+
+  /*********************** RETICULUM **************************/
+  Reticulum.init(camera, {
+    proximity: false,
+    clickevents: true,
+    near: null, //near factor of the raycaster (shouldn't be negative and should be smaller than the far property)
+    far: null, //far factor of the raycaster (shouldn't be negative and should be larger than the near property)
+    reticle: {
+      visible: true,
+        restPoint: 5, //Defines the reticle's resting point when no object has been targeted
+        color: 0xcc00cc,
+        innerRadius: 0.0001,
+        outerRadius: 0.005,
+        hover: {
+          color: 0x00cccc,
+          innerRadius: 0.02,
+          outerRadius: 0.024,
+          speed: 5,
+            vibrate: 50 //Set to 0 or [] to disable
+          }
+        },
+        fuse: {
+          visible: true,
+          duration: 2.5,
+          color: 0x00fff6,
+          innerRadius: 0.045,
+          outerRadius: 0.06,
+        vibrate: 100, //Set to 0 or [] to disable
+        clickCancelFuse: false //If users clicks on targeted object fuse is canceled
+      }
+    });
+  /*********************** END OF RETICULUM **************************/
+
   scene.add(camera);
 
   controls = new THREE.OrbitControls(camera, element);
@@ -113,8 +171,10 @@ py.vertices.push(
   menuGroup = new THREE.Object3D();
   createMenu();
   menuGroup.position.set(0, 0, 10);
+  menuGroup.rotationAutoUpdate = true;
   scene.add(menuGroup);
   highlightButton(4, true);
+  //updateMenu();
 
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
@@ -150,6 +210,9 @@ function render() {
 
 function animate(t) {
   requestAnimationFrame(animate);
+
+  Reticulum.update();
+  camera.updateMatrixWorld();
 
   update(clock.getDelta());
   render(clock.getDelta());
@@ -216,16 +279,39 @@ function createMenu() {
     plane.overdraw = true;
     plane.rotateX( 2 * Math.PI * i / sides );
     plane.translateZ( tz );
+    
+    Reticulum.add( plane, {
+      onGazeOver: function(){
+        // do something when user targets object
+        //this.material.color.setHSL(deg, 0.8, 1);
+        this.material.map = texture2;
+      },
+      onGazeOut: function(){
+        // do something when user moves reticle off targeted object
+        this.material.color.setHSL(deg, 0.8, 0.25);
+      },
+      /*onGazeLong: function(){
+        // do something user targetes object for specific time
+        //this.material.color.setHex( 0x0000cc );
+      },*/
+      onGazeClick: function(){
+        // have the object react when user clicks / taps on targeted object
+        //this.material.color.setHex( 0x00cccc * Math.random() );
+      }
+    });
+
     menuGroup.add(plane);
 
     menuButtons[i] = plane;
-  }
 
+  }
+}
+
+function updateMenu() {
 }
 
 function highlightButton(id, highlight) { // true to highlight, false to unhighlight
   var button1 = menuButtons[id];
-  console.log(button1);
   var button2 = selectedButton;
 
   if (highlight) {
@@ -239,6 +325,13 @@ function highlightButton(id, highlight) { // true to highlight, false to unhighl
     selectedButton = null;
   }
 
+  var targetRotation = 2 * Math.PI * id / sides;
+  menuGroup.rotation.x -= (targetRotation - menuGroup.rotation.x);
+
+}
+
+function clickSelected(id) {
+  buttons[id];
 }
 
 
@@ -295,7 +388,7 @@ function draw(line) {
     //render();
   }
   else {
-    console.log('detected new line');
+    //console.log('detected new line');
     geometry = new THREE.Geometry();
   }
 
