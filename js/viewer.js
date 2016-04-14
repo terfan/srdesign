@@ -21,7 +21,7 @@ var menuButtons = []; // geometry planes
 var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
 var selectedButton;
-var onMenu = false;
+var lineColor, lineThickness;
 
 var buttons = {
   'Brush': function () {
@@ -38,11 +38,13 @@ var buttons = {
   },
   'Thickness': function () {
     // TODO: brush thickness
-    console.log("thickness menu item clicked");
+    lineThickness = Math.round(Math.random() * 20);
+    console.log("thickness changed to "+lineThickness);
   },
   'Color': function () {
     // TODO: color
-    console.log("color menu item clicked");
+    lineColor = Math.random() * 0xffffff;
+    console.log("color changed to "+lineColor);
   }
 
 }
@@ -88,7 +90,7 @@ function init() {
         },
         fuse: {
           visible: true,
-          duration: 1,
+          duration: 1, //.5 for testing
           color: 0x00fff6,
           innerRadius: 0.045,
           outerRadius: 0.06,
@@ -173,26 +175,12 @@ py.vertices.push(
   menuGroup.position.set(0, 20, 10);
   menuGroup.rotationAutoUpdate = true;
   scene.add(menuGroup);
-  highlightButton(4, true);
-  //updateMenu();
+  //highlightButton(4, true);
 
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
 
   //setInterval(render, 1000/30);
-
-  /*function setMenuControl(e) {
-    var gammaRotation = e.gamma ? e.gamma * (Math.PI / 180) : 0;
-    menuGroup.rotation.y = gammaRotation;  
-        console.log('hello '+gammaRotation);
-
-  }
-  if (onMenu) {
-    console.log('on menu');
-    window.addEventListener('deviceorientation', setMenuControl, true);
-  } else {
-    window.removeEventListener('deviceorientation', setMenuControl, true);
-  }*/
 }
 
 function resize() {
@@ -298,34 +286,39 @@ function createMenu() {
       var gammaRotation =
         ((flipped ? e.gamma : -e.gamma) + (ab < 90 ? 90 : -90)) * (Math.PI / 180);
  
-      menuGroup.rotateX(gammaRotation * 0.05);
-      console.log(gammaRotation);
+      menuGroup.rotateX(gammaRotation * 0.1);
+      //console.log(gammaRotation);
     }
     
     Reticulum.add( plane, {
       onGazeOver: function(){
         // do something when user targets object
-        //onMenu = true;
-
-        //if (onMenu) {
-          window.addEventListener('deviceorientation', setMenuControl, true);
-        //}
+        window.addEventListener('deviceorientation', setMenuControl, true);
       },
       onGazeOut: function(){
         // do something when user moves reticle off targeted object
         this.material.map = textures[this.userData.id];
-        //onMenu = false;
         window.removeEventListener('deviceorientation', setMenuControl, true);
 
       },
       onGazeLong: function(){
         // do something user targetes object for specific time
-        this.material.map = selectedTextures[this.userData.id];
+
+        // rot = - id * deltaRotation; if rot == 0 then active plane
+        /*if (this.rotation.x == (Math.PI/2)) {
+          console.log(this.rotation.x);
+          this.material.map = selectedTextures[this.userData.id];         
+        }*/
+        window.removeEventListener('deviceorientation', setMenuControl, true);
 
       },
       onGazeClick: function(){
         // have the object react when user clicks / taps on targeted object
-        this.material.map = selectedTextures[this.userData.id];
+        var id = this.userData.id;
+        this.material.map = selectedTextures[id];
+        //highlightButton(this.userData.id, true);
+        window.removeEventListener('deviceorientation', setMenuControl, true);
+        clickSelected(id);
       }
     });
 
@@ -334,9 +327,6 @@ function createMenu() {
     menuButtons[i] = plane;
 
   }
-}
-
-function updateMenu() {
 }
 
 function highlightButton(id, highlight) { // true to highlight, false to unhighlight
@@ -360,7 +350,7 @@ function highlightButton(id, highlight) { // true to highlight, false to unhighl
 }
 
 function clickSelected(id) {
-  buttons[id];
+  (buttons[menuText[id]])();
 }
 
 
@@ -373,8 +363,8 @@ var prevPoint = new THREE.Vector3();
 
 function draw(line) {
   var material = new THREE.LineBasicMaterial({
-    color: new THREE.Color( line[2] ),
-    linewidth: 5
+    color: new THREE.Color( lineColor ? lineColor : line[2] ),
+    linewidth: (lineThickness ? lineThickness : 5)
   });
 
   var point = new THREE.Vector3();
@@ -423,203 +413,4 @@ function draw(line) {
 
   prevPoint = p1;
 }
-
-/*********************** CAROUSEL UI ***********************/
-
-  /*var onUpDown;
-  var selectedIdx = -1;
-  var rotating = false;
-  var transformProp = Modernizr.prefixed('transform');
-
-  var maxIdx = Object.size(buttons) - 1;
-
-  function openSelected() {
-    var i = 0;
-    for (var name in window.buttons) {
-      if (i == selectedIdx) {
-        (window.buttons[name])();
-        break;
-      }
-      i++;
-    }
-  }
-
-  function upButton() {
-    selectedIdx = ((selectedIdx <= 0) ? maxIdx : selectedIdx - 1);
-    onUpDown(-1);
-  }
-
-  function downButton() {
-    selectedIdx = ((selectedIdx == maxIdx) ? 0 : selectedIdx + 1);
-    onUpDown(1);
-  }
-
-  function selectItemFromClicks(num) {
-    var idx = num % (maxIdx + 1);
-    for (var i = 0; i < idx; ++i) {
-      downButton();
-    }
-  }
-
-  function Carousel3D(el, offset) {
-    this.element = el;
-
-    this.rotation = 0;
-    this.panelCount = this.element.children.length;
-    this.theta = 0;
-    this.offset = offset;
-  }
-
-  Carousel3D.prototype.modify = function () {
-
-    var panel, angle, i;
-
-    this.panelSize = this.element['offsetHeight'];
-    this.theta = 360 / this.panelCount;
-
-    // Figure out the carousel size in 3D space
-
-    this.radius =
-      Math.round(
-        (this.panelSize / 2) / Math.tan(Math.PI / this.panelCount)
-      );
-
-    for (i = 0; i < this.panelCount; i++) {
-      panel = this.element.children[i];
-      angle = this.theta * -i;
-      panel.style.opacity = 1;
-      panel.style.backgroundColor =
-        'hsla(' + angle + ', 100%, 20%, 0.8)';
-
-      // Rotate panel, then push it out in 3D space
-
-      panel.style[transformProp] =
-        'rotateX(' + angle + 'deg) ' +
-        'translateZ(' + this.radius + 'px)';
-    }
-
-    // Adjust rotation so panels are always flat
-
-    this.rotation =
-      Math.round(this.rotation / this.theta) * this.theta;
-
-    this.transform();
-  };
-
-  Carousel3D.prototype.transform = function () {
-
-    // Push the carousel back in 3D space, and rotate it
-
-    this.element.style[transformProp] =
-      'translateZ(-' + this.radius + 'px) ' +
-      'rotateX(' + this.rotation + 'deg) ' +
-      'rotateY(' + this.offset + 'deg)';
-  };
-
-  function highlightFrontPanel(carousel) {
-    var kid, trans, idx, rot, num, front, angle;
-    for (var name in carousel.element.children) {
-      kid = carousel.element.children[name];
-      if (kid.style) {
-        trans = kid.style[transformProp];
-        idx = trans.indexOf("rotateX(") + "rotateX(".length;
-        rot = trans.substring(idx);
-        num = parseFloat(rot);
-        angle = Math.abs(carousel.rotation + num) % 360.0;
-        front = (angle < 5 || angle > 355);
-        kid.style.color =
-          front ? "rgb(255, 255, 255)" : "rgb(34, 34, 34)";
-      }
-    }
-  }
-
-  var init = function () {
-
-    // Populate our initial UI with a set of buttons, one for each
-    // function in the Buttons object
-
-    var panel1 = document.getElementById('cont1');
-    var panel2 = document.getElementById('cont2');
-
-    var div1 = document.createElement('div');
-    div1.setAttribute('id', 'carousel1');
-    div1.setAttribute(
-      'style',
-      'transform: translateZ(-442px) rotateX(-360deg) rotateY(0deg);'
-    );
-
-    var div2 = document.createElement('div');
-    div2.setAttribute('id', 'carousel2');
-    div2.setAttribute(
-      'style',
-      'transform: translateZ(-442px) rotateX(-360deg) rotateY(0deg);'
-    );
-
-    panel1.appendChild(div1);
-    panel2.appendChild(div2);
-
-    var i = 0;
-    for (var name in window.buttons) {
-      var fn = window.buttons[name];
-  
-      var fig1 = document.createElement('figure');
-      fig1.setAttribute(
-        'style',
-        "opacity: 1; transform: rotateX(" +
-        (i * 18) + "deg) translateZ(442px); " +
-        "color: #222;"
-      );
-  
-      fig1.innerHTML = name;
-      fig1.onclick = (function (name) {
-        return function () { name(); };
-      })(fn);
-  
-      div1.appendChild(fig1);
-  
-      var fig2 = document.createElement('figure');
-      fig2.setAttribute(
-        'style',
-        "opacity: 1; transform: rotateX(" +
-        (i * 18) + "deg) translateZ(442px); " +
-        "color: #222;"
-      );
-
-      fig2.innerHTML = name;
-      fig2.onclick = (function (name) {
-        return function () { name(); };
-      })(fn);
-
-      div2.appendChild(fig2);
-
-      i = i + 1;
-    }
-
-    var car1 = new Carousel3D(div1, -0.5),
-        car2 = new Carousel3D(div2, 0.5);
-    highlightCarouselPanels = function() {
-      highlightFrontPanel(car1);
-      highlightFrontPanel(car2);
-    },
-    onUpDown = function (inc) {
-      car1.rotation += car1.theta * inc;
-      car1.transform();
-      car2.rotation += car2.theta * inc;
-      car2.transform();
-      highlightCarouselPanels();
-    };
-
-    car1.modify();
-    car2.modify();
-    
-    setTimeout(function () {
-      document.body.addClassName('ready');
-    }, 0);
-
-    setTimeout(function () {
-      highlightCarouselPanels();
-    }, 1000);
-  };
-
-  window.addEventListener('DOMContentLoaded', init, false);*/
 
