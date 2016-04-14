@@ -4,7 +4,7 @@ var socket  = io.connect();
 
 socket.on('draw_line', function (data) {
   var line = data.line;
-    //console.log("receiving signal from drawing tool "+line);
+  //console.log("receiving signal from drawing tool "+line);
   draw(line);
 });
 
@@ -38,12 +38,16 @@ var buttons = {
   },
   'Thickness': function () {
     // TODO: brush thickness
-    lineThickness = Math.round(Math.random() * 20);
+    var max = 20;
+    var min = 1;
+    lineThickness = Math.floor(Math.random() * (max - min + 1)) + min;
+    socket.emit('change_thickness', { thickness: lineThickness } );
     console.log("thickness changed to "+lineThickness);
   },
   'Color': function () {
     // TODO: color
     lineColor = Math.random() * 0xffffff;
+    socket.emit('change_color', { color: lineColor } );
     console.log("color changed to "+lineColor);
   }
 
@@ -363,8 +367,8 @@ var prevPoint = new THREE.Vector3();
 
 function draw(line) {
   var material = new THREE.LineBasicMaterial({
-    color: new THREE.Color( lineColor ? lineColor : line[2] ),
-    linewidth: (lineThickness ? lineThickness : 5)
+    color: new THREE.Color( line[2] ),
+    linewidth: ( line[3] ? line[3] : 5 )
   });
 
   var point = new THREE.Vector3();

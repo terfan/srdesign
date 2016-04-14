@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", function() {
    var brush = { 
       pos: {x:0, y:0},
       pos_prev: false,
-      style: "#ffffff",
+      color: "#ffffff",
+      thickness: 5,
    };
    // get canvas element and create context
    var canvas  = document.getElementById('canvas');
@@ -25,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function() {
            // scale coordinates to screen dimensions 
            x: touch.pageX / width,
            y: touch.pageY / height,
-           color: brush.style
+           color: brush.color,
+           thickness: brush.thickness
          };
          brush.pos_prev = {x: line.x, y: line.y};
       };
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
          brush.pos.x = ret.x;
          brush.pos.y = ret.y;
          
-         socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.style ] });
+         socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ] });
       };
       e.preventDefault();
       brush.pos_prev = {x: brush.pos.x, y: brush.pos.y};
@@ -63,9 +65,17 @@ document.addEventListener("DOMContentLoaded", function() {
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
-      /*console.log(line[0].x * width + ' '+line[0].y * height);
-      console.log(line[1].x * width + ' '+line[1].y * height);*/
       context.stroke();
       context.closePath();
+   });
+
+   // received color change signal from menu
+   socket.on('change_color', function (data) {
+      brush.color = data.color;
+   });
+
+   // received thickness change signal from menu
+   socket.on('change_thickness', function (data) {
+      brush.thickness = data.thickness;
    });
 });
