@@ -6,7 +6,7 @@ var express = require('express'),
 // start webserver on port 8080
 var server = http.createServer(app);
 var io = socketIo.listen(server);
-server.listen(8080);
+server.listen(process.env.PORT || 8080);
 app.use(express.static(__dirname));
 console.log("Server running on 8080");
 
