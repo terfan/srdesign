@@ -293,10 +293,13 @@ function createMenu() {
     plane.userData.id = i;
 
     function setMenuControl(e) {
-      var gammaRotation = e.gamma ? e.gamma * (Math.PI / 180) : 0;
-      menuGroup.rotation.y = gammaRotation;  
-      console.log('gaze on menu '+gammaRotation);
-
+      var ab = Math.abs(e.beta);
+      var flipped = (ab < 90 && e.gamma < 0) || (ab > 90 && e.gamma > 0);
+      var gammaRotation =
+        ((flipped ? e.gamma : -e.gamma) + (ab < 90 ? 90 : -90)) * (Math.PI / 180);
+ 
+      menuGroup.rotateX(gammaRotation * 0.05);
+      console.log(gammaRotation);
     }
     
     Reticulum.add( plane, {
@@ -305,15 +308,14 @@ function createMenu() {
         //onMenu = true;
 
         //if (onMenu) {
-                  window.addEventListener('deviceorientation', setMenuControl, true);
-
+          window.addEventListener('deviceorientation', setMenuControl, true);
         //}
       },
       onGazeOut: function(){
         // do something when user moves reticle off targeted object
         this.material.map = textures[this.userData.id];
         //onMenu = false;
-            window.removeEventListener('deviceorientation', setMenuControl, true);
+        window.removeEventListener('deviceorientation', setMenuControl, true);
 
       },
       onGazeLong: function(){
