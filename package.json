@@ -2,8 +2,15 @@
   "name": "cardboard-canvas",
   "version": "0.0.1",
   "description": "3d painting in virtual reality",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "express": "^4.10.2",
     "socket.io": "^1.4.5"
-  }
+  },
+  "engines": {
+    "node": "4.3.0"
+  },
 }

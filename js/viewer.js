@@ -21,7 +21,7 @@ var menuButtons = []; // geometry planes
 var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
 var selectedButton;
-var reticle;
+var onMenu = false;
 
 var buttons = {
   'Brush': function () {
@@ -87,8 +87,8 @@ function init() {
           }
         },
         fuse: {
-          visible: false,
-          duration: 2.5,
+          visible: true,
+          duration: 1,
           color: 0x00fff6,
           innerRadius: 0.045,
           outerRadius: 0.06,
@@ -170,7 +170,7 @@ py.vertices.push(
 
   menuGroup = new THREE.Object3D();
   createMenu();
-  menuGroup.position.set(0, 0, 10);
+  menuGroup.position.set(0, 20, 10);
   menuGroup.rotationAutoUpdate = true;
   scene.add(menuGroup);
   highlightButton(4, true);
@@ -181,6 +181,18 @@ py.vertices.push(
 
   //setInterval(render, 1000/30);
 
+  /*function setMenuControl(e) {
+    var gammaRotation = e.gamma ? e.gamma * (Math.PI / 180) : 0;
+    menuGroup.rotation.y = gammaRotation;  
+        console.log('hello '+gammaRotation);
+
+  }
+  if (onMenu) {
+    console.log('on menu');
+    window.addEventListener('deviceorientation', setMenuControl, true);
+  } else {
+    window.removeEventListener('deviceorientation', setMenuControl, true);
+  }*/
 }
 
 function resize() {
@@ -204,7 +216,6 @@ function update(dt) {
 
 function render() {
   //geometry.verticesNeedUpdate = true; // unnecessary?
-  
   effect.render(scene, camera);
 }
 
@@ -280,25 +291,39 @@ function createMenu() {
     plane.rotateX( 2 * Math.PI * i / sides );
     plane.translateZ( tz );
     plane.userData.id = i;
+
+    function setMenuControl(e) {
+      var gammaRotation = e.gamma ? e.gamma * (Math.PI / 180) : 0;
+      menuGroup.rotation.y = gammaRotation;  
+      console.log('gaze on menu '+gammaRotation);
+
+    }
     
     Reticulum.add( plane, {
       onGazeOver: function(){
         // do something when user targets object
-        //this.material.color.setHSL(deg, 0.8, 1);
-        this.material.map = selectedTextures[this.userData.id];
+        //onMenu = true;
+
+        //if (onMenu) {
+                  window.addEventListener('deviceorientation', setMenuControl, true);
+
+        //}
       },
       onGazeOut: function(){
         // do something when user moves reticle off targeted object
-        //this.material.color.setHSL(deg, 0.8, 0.25);
         this.material.map = textures[this.userData.id];
+        //onMenu = false;
+            window.removeEventListener('deviceorientation', setMenuControl, true);
+
       },
       onGazeLong: function(){
         // do something user targetes object for specific time
-        //this.material.color.setHex( 0x0000cc );
+        this.material.map = selectedTextures[this.userData.id];
+
       },
       onGazeClick: function(){
         // have the object react when user clicks / taps on targeted object
-        //this.material.color.setHex( 0x00cccc * Math.random() );
+        this.material.map = selectedTextures[this.userData.id];
       }
     });
 
