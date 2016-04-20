@@ -71,8 +71,6 @@ function init() {
 
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
   camera.position.set(10, 20, 40); // TODO: play around with camera stuff
-  camera.lookAt(new THREE.Vector3(0,0,0));
-  camera.updateProjectionMatrix();
 
   /*********************** RETICLE **************************/
   Reticulum.init(camera, {
@@ -233,6 +231,7 @@ function fullscreen() {
   } else if (container.webkitRequestFullscreen) {
     container.webkitRequestFullscreen();
   }
+  screen.orientation.lock( 'any' )
 }
 
 /*********************** CAROUSEL UI ***********************/
