@@ -60,6 +60,7 @@ animate();
 
 function init() {
   renderer = new THREE.WebGLRenderer();
+  renderer.setClearColor(0x000000, 1);
   element = renderer.domElement;
   container = document.getElementById('canvas');
   container.appendChild(element);
