@@ -1,5 +1,5 @@
 var brush = { 
-   pos: {x:0, y:0},
+   pos: {x:0, y:0, z:0},
    pos_prev: false,
    color: "#ffffff",
    thickness: 5,
@@ -34,10 +34,11 @@ document.addEventListener("DOMContentLoaded", function() {
            // scale coordinates to screen dimensions 
            x: touch.pageX / width,
            y: touch.pageY / height,
+           z: brush.pos.z,
            color: brush.color,
            thickness: brush.thickness
          };
-         brush.pos_prev = {x: line.x, y: line.y};
+         brush.pos_prev = {x: line.x, y: line.y, z: line.z};
       };
       e.preventDefault();
    }, false);
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
          socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ] });
       };
       e.preventDefault();
-      brush.pos_prev = {x: brush.pos.x, y: brush.pos.y};
+      brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
    }, false);
 
    function move(changeX, changeY) {
@@ -89,12 +90,14 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function handleMotion(event) {
-   var aUp = event.acceleration.y;
    var aRight = event.acceleration.x;
+   // assuming phone is being held flat (screen-up)
+   var aUp = event.acceleration.z;
+   var aForward = event.acceleration.y;
 
    if (aUp != 0 || aRight != 0) {
 
-      var thicknessFromAcc = Math.sqrt(Math.pow(aUp, 2) + Math.pow(aRight, 2)) * 2;
+      var thicknessFromAcc = Math.sqrt(Math.pow(aUp, 2) + Math.pow(aRight, 2)) * 5;
 
             document.getElementById('msg').innerHTML = thicknessFromAcc;
 
@@ -106,7 +109,8 @@ function handleMotion(event) {
          brush.thickness = thicknessFromAcc;
       }
    }
-   /*console.log(event.acceleration.x + ' m/s2 in x');
-   console.log(event.acceleration.y + ' m/s2 in y');
-   console.log(event.acceleration.z + ' m/s2 in z');*/
+
+   if (aForward != 0) {
+      brush.pos.z += (aForward * 5); 
+   } 
 }

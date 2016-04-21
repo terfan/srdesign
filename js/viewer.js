@@ -388,7 +388,8 @@ function draw(line) {
     for (var i = 0; i < 2; i++) {
       point.x = line[i].x; 
       point.y = line[i].y;
-      point.z = 0;
+      point.z = line[i].z;
+      console.log('z is '+point.z);
       geometry.vertices.push( point );
     }
 
@@ -409,7 +410,6 @@ function draw(line) {
     scene.add(line);
     //console.log("added a line");
     //}
-    //render();
   }
   else {
     //console.log('detected new line');
