@@ -99,7 +99,7 @@ function handleMotion(event) {
 
       var thicknessFromAcc = Math.sqrt(Math.pow(aUp, 2) + Math.pow(aRight, 2)) * 5;
 
-            document.getElementById('msg').innerHTML = thicknessFromAcc;
+            //document.getElementById('msg').innerHTML = thicknessFromAcc;
 
       if (thicknessFromAcc < 1) {
          brush.thickness = 1;
@@ -112,5 +112,6 @@ function handleMotion(event) {
 
    if (aForward != 0) {
       brush.pos.z += aForward; 
+      document.getElementById('msg').innerHTML = aForward;
    } 
 }
