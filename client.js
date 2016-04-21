@@ -1,10 +1,11 @@
+var brush = { 
+   pos: {x:0, y:0},
+   pos_prev: false,
+   color: "#ffffff",
+   thickness: 5,
+};
+
 document.addEventListener("DOMContentLoaded", function() {
-   var brush = { 
-      pos: {x:0, y:0},
-      pos_prev: false,
-      color: "#ffffff",
-      thickness: 5,
-   };
    // get canvas element and create context
    var canvas  = document.getElementById('canvas');
    var context = canvas.getContext('2d');
@@ -16,6 +17,13 @@ document.addEventListener("DOMContentLoaded", function() {
    // set canvas to full browser width/height
    canvas.width = width;
    canvas.height = height;
+
+   // register device motion handlers
+   if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', handleMotion, false);
+   } else {
+      document.getElementById('msg').innerHTML = "DeviceMotion not supported."
+   }
 
    // register touch event handlers
    canvas.addEventListener('touchstart', function(e) {
@@ -79,3 +87,26 @@ document.addEventListener("DOMContentLoaded", function() {
       brush.thickness = data.thickness;
    });
 });
+
+function handleMotion(event) {
+   var aUp = event.acceleration.y;
+   var aRight = event.acceleration.x;
+
+   if (aUp != 0 || aRight != 0) {
+
+      var thicknessFromAcc = Math.sqrt(Math.pow(aUp, 2) + Math.pow(aRight, 2)) * 2;
+
+            document.getElementById('msg').innerHTML = thicknessFromAcc;
+
+      if (thicknessFromAcc < 1) {
+         brush.thickness = 1;
+      } else if (thicknessFromAcc > 20) {
+         brush.thickness = 20;
+      } else {
+         brush.thickness = thicknessFromAcc;
+      }
+   }
+   /*console.log(event.acceleration.x + ' m/s2 in x');
+   console.log(event.acceleration.y + ' m/s2 in y');
+   console.log(event.acceleration.z + ' m/s2 in z');*/
+}
