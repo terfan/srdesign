@@ -111,6 +111,6 @@ function handleMotion(event) {
    }
 
    if (aForward != 0) {
-      brush.pos.z += (aForward * 5); 
+      brush.pos.z += aForward; 
    } 
 }
