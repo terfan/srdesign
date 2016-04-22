@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function() {
          brush.pos.z = ret.z;
          
          socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ] });
+         brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
       }
    }
    
