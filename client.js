@@ -25,11 +25,11 @@ document.addEventListener("DOMContentLoaded", function() {
    canvas.height = height;
 
    // register device motion handlers
-   if (window.DeviceMotionEvent) {
+   /*if (window.DeviceMotionEvent) {
       window.addEventListener('devicemotion', handleMotion, false);
    } else {
       document.getElementById('msg').innerHTML = "DeviceMotion not supported."
-   }
+   }*/
 
    // drawing by finger motion
    if (debugMode) {
