@@ -152,7 +152,7 @@ function init() {
   //scene.add(mesh);
 
   /** AXES FOR TESTING **/
-    /*var material2 = new THREE.LineBasicMaterial({
+    var material2 = new THREE.LineBasicMaterial({
     color: 0x0000ff,
     linewidth: 5
   });
@@ -170,7 +170,14 @@ py.vertices.push(
   new THREE.Vector3( 0, 50, 0 )
 );
     var yaxis = new THREE.Line( py, material2 );
-    scene.add(yaxis);*/
+    scene.add(yaxis);
+    var pz = new THREE.Geometry();
+    pz.vertices.push(
+  new THREE.Vector3( 0, 0, -50 ),
+  new THREE.Vector3( 0, 0, 50 )
+);
+    var zaxis = new THREE.Line (pz, material2);
+    scene.add(zaxis);
 
   /** END OF AXES FOR TESTING **/
 
