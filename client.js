@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
             brush.pos_prev = {x: line.x, y: line.y, z: line.z};
          };
          e.preventDefault();
-         canvas.addEventListener('devicemotion', detectMotion, false);
+         window.addEventListener('devicemotion', detectMotion, false);
       }, false);
 
       canvas.addEventListener('touchend', function(e) {
