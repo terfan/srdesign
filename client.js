@@ -1,7 +1,7 @@
 var debugMode = false;
 
 var brush = { 
-   pos: {x:0, y:0, z:0},
+   pos: {x:10, y:20, z:0}, // set initial position to where camera faces
    pos_prev: false,
    color: "#ffffff",
    thickness: 5,
@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       canvas.addEventListener('touchend', function(e) {
          window.removeEventListener('devicemotion', detectMotion);
+         document.getElementById('msg').innerHTML = 'no longer detecting motion';
       }, false);
 
       function move(changeX, changeY, changeZ) {
@@ -148,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
          /*brush.pos.x += vx;
          brush.pos.y += vy;
          brush.pos.z += vz;*/
-         var ret = move(vx, vy, vz);
+         var ret = move(vx, vy, -vz); // reflect z coordinates
          brush.pos.x = ret.x;
          brush.pos.y = ret.y;
          brush.pos.z = ret.z;

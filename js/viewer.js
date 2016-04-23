@@ -4,7 +4,7 @@ var socket  = io.connect();
 
 socket.on('draw_line', function (data) {
   var line = data.line;
-  console.log("receiving signal from drawing tool "+line);
+  //console.log("receiving signal from drawing tool "+line);
   draw(line);
 });
 
