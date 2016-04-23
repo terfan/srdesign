@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", function() {
    
    } else { // drawing by phone motion
       canvas.addEventListener('touchstart', function(e) {
+                        document.getElementById('msg').innerHTML = 'detected touchstart';
+
          // If there's exactly one finger inside this element
          if (e.targetTouches.length == 1) {
             var touch = e.targetTouches[0];
@@ -118,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       function detectMotion(e) {
+               document.getElementById('msg').innerHTML = 'in detectmotion';
+
          aRight = e.acceleration.x * sensitivity;
          // assuming phone is being held flat (screen-up)
          aUp = e.acceleration.z * sensitivity;
