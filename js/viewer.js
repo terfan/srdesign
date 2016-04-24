@@ -396,7 +396,7 @@ function draw(line) {
       point.x = line[i].x; 
       point.y = line[i].y;
       point.z = line[i].z;
-      console.log('z is '+point.z);
+      console.log('point is '+point.x + ' ' + point.y + ' ' + point.z);
       geometry.vertices.push( point );
     }
 
@@ -411,15 +411,15 @@ function draw(line) {
     /*for (var i = 0; i < points.length; i++) {
     var line = new THREE.Line( points[i], materials[i] );*/
     var line = new THREE.Line( geometry, material );
-    line.scale.set(scale_x, scale_y, scale_z);
-    line.rotateX(Math.PI);
-    line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);
+    //line.scale.set(scale_x, scale_y, scale_z);
+    //line.rotateX(Math.PI);
+    //line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);
     scene.add(line);
     //console.log("added a line");
     //}
   }
   else {
-    //console.log('detected new line');
+    console.log('detected new line');
     geometry = new THREE.Geometry();
   }
 
