@@ -5,7 +5,9 @@ var socket  = io.connect();
 socket.on('draw_line', function (data) {
   var line = data.line;
   //console.log("receiving signal from drawing tool "+line);
-  draw(line);
+  var debugMode = data.debug;
+  var newLine = data.newLine;
+  draw(line, debugMode, newLine);
 });
 
 /***************** THREE JS ******************/
@@ -373,7 +375,7 @@ var materials = [];
 var geometry = new THREE.Geometry();
 var prevPoint = new THREE.Vector3();
 
-function draw(line) {
+function draw(line, debugMode, newLine) {
   var material = new THREE.LineBasicMaterial({
     color: new THREE.Color( line[2] ),
     linewidth: ( line[3] ? line[3] : 5 )
@@ -390,7 +392,7 @@ function draw(line) {
   p2.y = line[1].y;
   p2.z = line[1].z;
 
-  if (p2.equals(prevPoint)) { // continuing a line
+  if ((debugMode && p2.equals(prevPoint)) || (!debugMode && !newLine)) { // continuing a line
 
     for (var i = 0; i < 2; i++) {
       point.x = line[i].x; 
@@ -411,9 +413,11 @@ function draw(line) {
     /*for (var i = 0; i < points.length; i++) {
     var line = new THREE.Line( points[i], materials[i] );*/
     var line = new THREE.Line( geometry, material );
-    //line.scale.set(scale_x, scale_y, scale_z);
-    //line.rotateX(Math.PI);
-    //line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);
+    if (debugMode) {
+      line.scale.set(scale_x, scale_y, scale_z);
+      line.rotateX(Math.PI);
+      line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
+    }
     scene.add(line);
     //console.log("added a line");
     //}

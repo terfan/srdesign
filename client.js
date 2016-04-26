@@ -7,6 +7,7 @@ var brush = {
    thickness: 5,
 };
 
+var touchReleased = true;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
 var sensitivity = 0.2;
@@ -25,11 +26,12 @@ document.addEventListener("DOMContentLoaded", function() {
    canvas.height = height;
 
    // register device motion handlers
-   /*if (window.DeviceMotionEvent) {
+   if (!window.DeviceMotionEvent) {
       window.addEventListener('devicemotion', handleMotion, false);
    } else {
       document.getElementById('msg').innerHTML = "DeviceMotion not supported."
-   }*/
+      debugMode = true;
+   }
 
    // drawing by finger motion
    if (debugMode) {
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
             brush.pos.x = ret.x;
             brush.pos.y = ret.y;
          
-            socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ] });
+            socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ], debug: debugMode, newLine: false });
          };
          e.preventDefault();
          brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
@@ -93,6 +95,12 @@ document.addEventListener("DOMContentLoaded", function() {
          // If there's exactly one finger inside this element
          if (e.targetTouches.length == 1) {
             var touch = e.targetTouches[0];
+            if (touch.force) {
+               var max = 20;
+               var min = 1;
+               brush.thickness = Math.floor(touch.force * (max - min + 1)) + min;
+            }
+            
             line = {
                // scale coordinates to screen dimensions 
                x: brush.pos.x,
@@ -104,12 +112,14 @@ document.addEventListener("DOMContentLoaded", function() {
             brush.pos_prev = {x: line.x, y: line.y, z: line.z};
          };
          e.preventDefault();
-         window.addEventListener('devicemotion', detectMotion, false);
+         window.addEventListener('devicemotion', handleMotion, false);
       }, false);
 
       canvas.addEventListener('touchend', function(e) {
-         window.removeEventListener('devicemotion', detectMotion);
+         window.removeEventListener('devicemotion', handleMotion);
          document.getElementById('msg').innerHTML = 'no longer detecting motion';
+         // TODO: set brush.pos to viewer's gaze?
+         touchReleased = true;
       }, false);
 
       function move(changeX, changeY, changeZ) {
@@ -119,44 +129,42 @@ document.addEventListener("DOMContentLoaded", function() {
             z: line.z + changeZ
          };
       }
+   }
 
-      function detectMotion(e) {
-               document.getElementById('msg').innerHTML = 'in detectmotion';
+   function handleMotion(e) {
+               document.getElementById('msg').innerHTML = 'in handlemotion';
 
-         aRight = e.acceleration.x * sensitivity;
-         // assuming phone is being held flat (screen-up)
-         aUp = e.acceleration.z * sensitivity;
-         aForward = e.acceleration.y * sensitivity;
+      aRight = e.acceleration.x * sensitivity;
+      // assuming phone is being held flat (screen-up)
+      aUp = e.acceleration.z * sensitivity;
+      aForward = e.acceleration.y * sensitivity;
 
-         vx += aRight;
-         vy += aUp;
-         vz += aForward;
+      vx += aRight;
+      vy += aUp;
+      vz += aForward;
 
-         var x = y = z = 0;
-         x = brush.pos.x + vx;
-         y = brush.pos.y + vy;
-         z = brush.pos.z + vz;
-         if (x > 699) {
-            x = 699;
-         }
-         if (y > 699) {
-            y = 699;
-         }
-         if (z = 699) {
-            z = 699;
-         }
-
-         /*brush.pos.x += vx;
-         brush.pos.y += vy;
-         brush.pos.z += vz;*/
-         var ret = move(vx, vy, -vz); // reflect z coordinates
-         brush.pos.x = ret.x;
-         brush.pos.y = ret.y;
-         brush.pos.z = ret.z;
-         
-         socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ] });
-         brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
+      var x = y = z = 0;
+      x = brush.pos.x + vx;
+      y = brush.pos.y + vy;
+      z = brush.pos.z + vz;
+      if (x > 699) {
+         x = 699;
       }
+      if (y > 699) {
+         y = 699;
+      }
+      if (z = 699) {
+         z = 699;
+      }
+
+      var ret = move(vx, vy, -vz); // reflect z coordinates
+      brush.pos.x = ret.x;
+      brush.pos.y = ret.y;
+      brush.pos.z = ret.z;
+      
+      socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ], debug: debugMode, newLine: touchReleased });
+      brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
+      touchReleased = false;
    }
    
    // received color change signal from menu
@@ -169,52 +177,3 @@ document.addEventListener("DOMContentLoaded", function() {
       brush.thickness = data.thickness;
    });
 });
-
-function handleMotion(event) {
-   aRight = event.acceleration.x * sensitivity;
-   // assuming phone is being held flat (screen-up)
-   aUp = event.acceleration.z * sensitivity;
-   aForward = event.acceleration.y * sensitivity;
-
-   vx += aRight;
-   vy += aUp;
-   vz += aForward;
-
-   if (aUp != 0 || aRight != 0) {
-
-      var thicknessFromAcc = Math.sqrt(Math.pow(aUp, 2) + Math.pow(aRight, 2)) * 5;
-
-            //document.getElementById('msg').innerHTML = thicknessFromAcc;
-
-      if (thicknessFromAcc < 1) {
-         brush.thickness = 1;
-      } else if (thicknessFromAcc > 20) {
-         brush.thickness = 20;
-      } else {
-         brush.thickness = Math.floor(thicknessFromAcc);
-      }
-   }
-
-   var x = y = z = 0;
-   x = brush.pos.x + vx;
-   y = brush.pos.y + vy;
-   z = brush.pos.z + vz;
-   if (x > 699) {
-      x = 699;
-   }
-   if (y > 699) {
-      y = 699;
-   }
-   if (z = 699) {
-      z = 699;
-   }
-
-   brush.pos.x += vx;
-   brush.pos.y += vy;
-   brush.pos.z += vz; 
-
-   if (aForward != 0) {
-      brush.pos.z += aForward; 
-      document.getElementById('msg').innerHTML = aForward;
-   } 
-}
