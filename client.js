@@ -1,7 +1,7 @@
 var debugMode = false;
 
 var brush = { 
-   pos: {x:10, y:20, z:0}, // set initial position to where camera faces
+   pos: {x:20, y:20, z:0}, // set initial position to where camera faces
    pos_prev: false,
    color: "#ffffff",
    thickness: 5,
@@ -164,6 +164,12 @@ document.addEventListener("DOMContentLoaded", function() {
       brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
       touchReleased = false;
    }
+
+   socket.on('move_gaze', function (data) {
+      brush.pos.x = data.gaze.x * 20;
+      brush.pos.y = data.gaze.y * 20;
+      brush.pos.z = data.gaze.z * 20;
+   });
    
    // received color change signal from menu
    socket.on('change_color', function (data) {

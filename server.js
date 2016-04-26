@@ -33,6 +33,10 @@ io.on('connection', function (socket) {
     io.emit('draw_line', { line: data.line, debug: data.debug, newLine: data.newLine });
   });
 
+  socket.on('move_gaze', function (data) {
+    io.emit('move_gaze', { gaze: data.gaze });
+  })
+
   socket.on('change_color', function (data) {
     io.emit('change_color', { color: data.color });
   });

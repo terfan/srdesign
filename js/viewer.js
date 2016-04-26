@@ -7,7 +7,6 @@ socket.on('draw_line', function (data) {
   //console.log("receiving signal from drawing tool "+line);
   var debugMode = data.debug;
   var newLine = data.newLine;
-  console.log('newline is '+newLine);
   draw(line, debugMode, newLine);
 });
 
@@ -16,6 +15,7 @@ socket.on('draw_line', function (data) {
 var camera, scene, renderer;
 var scene2, renderer2;
 var effect, controls;
+var raycaster = new THREE.Raycaster();
 var element, container;
 var menuGroup;
 var sides = 5;
@@ -212,7 +212,6 @@ function update(dt) {
   resize();
 
   camera.updateProjectionMatrix();
-
   controls.update(dt);
 }
 
@@ -391,14 +390,18 @@ function draw(line, debugMode, newLine) {
     if (p2.equals(prevPoint)) { // continuing a line
       continueLine(line, debugMode);
     } else {
-      console.log('detected new line');
+      //console.log('detected new line');
       geometry = new THREE.Geometry();
+      var direction = camera.getWorldDirection();
+      socket.emit('move_gaze', { gaze: direction } );
     }
   } else {
     if (newLine) {
-      console.log('detected new line');
+      //console.log('detected new line');
       geometry = new THREE.Geometry();
       //TODO socket emit new starting pos?
+      var direction = camera.getWorldDirection();
+      socket.emit('move_gaze', { gaze: direction } );
     } else {
       continueLine(line, debugMode);
     }
