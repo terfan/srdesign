@@ -169,6 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
       brush.pos.x = data.gaze.x * 20;
       brush.pos.y = data.gaze.y * 20;
       brush.pos.z = data.gaze.z * 20;
+      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    
    // received color change signal from menu
