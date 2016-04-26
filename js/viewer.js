@@ -7,6 +7,7 @@ socket.on('draw_line', function (data) {
   //console.log("receiving signal from drawing tool "+line);
   var debugMode = data.debug;
   var newLine = data.newLine;
+  console.log('newline is '+newLine);
   draw(line, debugMode, newLine);
 });
 
@@ -394,12 +395,12 @@ function draw(line, debugMode, newLine) {
       geometry = new THREE.Geometry();
     }
   } else {
-    if (!newLine) { // continuing a line
-      continueLine(line, debugMode);
-    } else {
+    if (newLine) {
       console.log('detected new line');
       geometry = new THREE.Geometry();
       //TODO socket emit new starting pos?
+    } else {
+      continueLine(line, debugMode);
     }
   }
   prevPoint = p1;
