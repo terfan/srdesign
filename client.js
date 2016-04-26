@@ -27,8 +27,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
    // register device motion handlers
    if (!window.DeviceMotionEvent) {
-      window.addEventListener('devicemotion', handleMotion, false);
-   } else {
       document.getElementById('msg').innerHTML = "DeviceMotion not supported."
       debugMode = true;
    }

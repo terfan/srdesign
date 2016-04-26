@@ -376,12 +376,6 @@ var geometry = new THREE.Geometry();
 var prevPoint = new THREE.Vector3();
 
 function draw(line, debugMode, newLine) {
-  var material = new THREE.LineBasicMaterial({
-    color: new THREE.Color( line[2] ),
-    linewidth: ( line[3] ? line[3] : 5 )
-  });
-
-  var point = new THREE.Vector3();
 
   var p1 = new THREE.Vector3();
   p1.x = line[0].x;
@@ -392,9 +386,33 @@ function draw(line, debugMode, newLine) {
   p2.y = line[1].y;
   p2.z = line[1].z;
 
-  if ((debugMode && p2.equals(prevPoint)) || (!debugMode && !newLine)) { // continuing a line
+  if (debugMode) {
+    if (p2.equals(prevPoint)) { // continuing a line
+      continueLine(line, debugMode);
+    } else {
+      console.log('detected new line');
+      geometry = new THREE.Geometry();
+    }
+  } else {
+    if (!newLine) { // continuing a line
+      continueLine(line, debugMode);
+    } else {
+      console.log('detected new line');
+      geometry = new THREE.Geometry();
+      //TODO socket emit new starting pos?
+    }
+  }
+  prevPoint = p1;
+}
 
-    for (var i = 0; i < 2; i++) {
+function continueLine(line, debugMode) {
+  var material = new THREE.LineBasicMaterial({
+    color: new THREE.Color( line[2] ),
+    linewidth: ( line[3] ? line[3] : 5 )
+  });
+  var point = new THREE.Vector3();
+
+  for (var i = 0; i < 2; i++) {
       point.x = line[i].x; 
       point.y = line[i].y;
       point.z = line[i].z;
@@ -419,14 +437,5 @@ function draw(line, debugMode, newLine) {
       line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
     }
     scene.add(line);
-    //console.log("added a line");
-    //}
-  }
-  else {
-    console.log('detected new line');
-    geometry = new THREE.Geometry();
-  }
-
-  prevPoint = p1;
 }
 
