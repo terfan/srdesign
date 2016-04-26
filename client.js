@@ -1,4 +1,4 @@
-var debugMode = true;
+var debugMode = false;
 
 var brush = { 
    pos: {x:10, y:20, z:0}, // set initial position to where camera faces
