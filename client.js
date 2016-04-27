@@ -11,6 +11,7 @@ var touchReleased = true;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
 var sensitivity = 0.2;
+var cameraPos = new THREE.Vector3(10, 20, 40);
 
 document.addEventListener("DOMContentLoaded", function() {
    // get canvas element and create context
@@ -166,9 +167,9 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    socket.on('move_gaze', function (data) {
-      brush.pos.x = data.gaze.x * 20;
-      brush.pos.y = data.gaze.y * 20;
-      brush.pos.z = data.gaze.z * 20;
+      brush.pos.x = data.gaze.x * 20 + cameraPos.x;
+      brush.pos.y = data.gaze.y * 20 + cameraPos.y;
+      brush.pos.z = data.gaze.z * 20 + cameraPos.z;
       document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    
