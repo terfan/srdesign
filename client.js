@@ -167,9 +167,9 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    socket.on('move_gaze', function (data) {
-      brush.pos.x = data.gaze.x * 20 + cameraPos.x;
-      brush.pos.y = data.gaze.y * 20 + cameraPos.y;
-      brush.pos.z = data.gaze.z * 20 + cameraPos.z;
+      brush.pos.x = data.gaze.x * 10 + cameraPos.x;
+      brush.pos.y = data.gaze.y * 10 + cameraPos.y;
+      brush.pos.z = data.gaze.z * 10 + cameraPos.z;
       document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    

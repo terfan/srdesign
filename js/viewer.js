@@ -420,7 +420,7 @@ function continueLine(line, debugMode) {
       point.x = line[i].x; 
       point.y = line[i].y;
       point.z = line[i].z;
-      console.log('point is '+point.x + ' ' + point.y + ' ' + point.z);
+      //console.log('point is '+point.x + ' ' + point.y + ' ' + point.z);
       geometry.vertices.push( point );
     }
 
