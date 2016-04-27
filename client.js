@@ -7,7 +7,7 @@ var brush = {
    thickness: 5,
 };
 
-var touchReleased = true;
+var touchReleased = false;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
 var sensitivity = 0.2;

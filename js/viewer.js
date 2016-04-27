@@ -392,6 +392,7 @@ function draw(line, debugMode, newLine) {
     } else {
       //console.log('detected new line');
       geometry = new THREE.Geometry();
+      camera.updateMatrixWorld();
       var direction = camera.getWorldDirection();
       socket.emit('move_gaze', { gaze: direction } );
     }
