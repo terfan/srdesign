@@ -37,6 +37,7 @@ var buttons = {
   },
   'Clear': function () {
     socket.emit('clear');
+    location.reload(false);
   },
   'Thickness': function () {
     // TODO: brush thickness

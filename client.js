@@ -10,7 +10,7 @@ var brush = {
 var touchReleased = false;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
-var sensitivity = 0.1; //0.2?
+var sensitivity = 0.05; //0.2?
 var cameraPos = new THREE.Vector3(10, 20, 40);
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -101,7 +101,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             
             line = {
-               // scale coordinates to screen dimensions 
                x: brush.pos.x,
                y: brush.pos.y,
                z: brush.pos.z,
