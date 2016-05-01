@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       canvas.addEventListener('touchend', function(e) {
          window.removeEventListener('devicemotion', handleMotion);
-         document.getElementById('msg').innerHTML = 'no longer detecting motion';
+         //document.getElementById('msg').innerHTML = 'no longer detecting motion';
          // TODO: set brush.pos to viewer's gaze?
          touchReleased = true;
       }, false);
@@ -167,9 +167,9 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    socket.on('move_gaze', function (data) {
-      brush.pos.x = data.gaze.x * 10 + cameraPos.x;
-      brush.pos.y = data.gaze.y * 10 + cameraPos.y;
-      brush.pos.z = data.gaze.z * 10 + cameraPos.z;
+      brush.pos.x = data.gaze.x * 40 + cameraPos.x;
+      brush.pos.y = data.gaze.y * 40 + cameraPos.y;
+      brush.pos.z = data.gaze.z * 40 + cameraPos.z;
       document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    
