@@ -44,4 +44,10 @@ io.on('connection', function (socket) {
   socket.on('change_thickness', function (data) {
     io.emit('change_thickness', { thickness: data.thickness });
   });
+
+  socket.on('clear', function () {
+    line_history = [];
+    debug_history = [];
+    newLine_history = [];
+  });
 });

@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    function handleMotion(e) {
-               document.getElementById('msg').innerHTML = 'in handlemotion';
+               //document.getElementById('msg').innerHTML = 'in handlemotion';
 
       aRight = e.acceleration.x * sensitivity;
       // assuming phone is being held flat (screen-up)

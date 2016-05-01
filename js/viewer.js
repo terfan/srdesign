@@ -35,9 +35,8 @@ var buttons = {
     // TODO: show warning message and/or option to save?
     window.history.back();
   },
-  'Undo': function () {
-    // TODO: undo
-    console.log("undo menu item clicked");
+  'Clear': function () {
+    socket.emit('clear');
   },
   'Thickness': function () {
     // TODO: brush thickness
