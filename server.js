@@ -46,6 +46,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('clear', function () {
+    console.log('clear');
     line_history = [];
     debug_history = [];
     newLine_history = [];

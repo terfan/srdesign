@@ -19,7 +19,7 @@ var raycaster = new THREE.Raycaster();
 var element, container;
 var menuGroup;
 var sides = 5;
-var menuText = ['Brush', 'Exit', 'Undo', 'Thickness', 'Color'];
+var menuText = ['Brush', 'Exit', 'Clear', 'Thickness', 'Color'];
 var menuButtons = []; // geometry planes
 var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
