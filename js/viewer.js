@@ -25,6 +25,7 @@ var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
 var selectedButton;
 var lineColor, lineThickness;
+var lines = [];
 
 var buttons = {
   'Brush': function () {
@@ -37,7 +38,11 @@ var buttons = {
   },
   'Clear': function () {
     socket.emit('clear');
-    location.reload(false);
+    //location.reload(false);
+    for (int i = 0; i < lines.length; i++) {
+      scene.remove(line);
+    }
+    lines = [];
   },
   'Thickness': function () {
     // TODO: brush thickness
@@ -439,6 +444,7 @@ function continueLine(line, debugMode) {
       line.rotateX(Math.PI);
       line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
     }
+    lines.push(line);
     scene.add(line);
 }
 
