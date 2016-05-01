@@ -40,7 +40,7 @@ var buttons = {
     socket.emit('clear');
     //location.reload(false);
     for (var i = 0; i < lines.length; i++) {
-      scene.remove(line);
+      scene.remove(lines[i]);
     }
     lines = [];
   },
