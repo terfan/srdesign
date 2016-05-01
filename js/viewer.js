@@ -39,7 +39,7 @@ var buttons = {
   'Clear': function () {
     socket.emit('clear');
     //location.reload(false);
-    for (int i = 0; i < lines.length; i++) {
+    for (var i = 0; i < lines.length; i++) {
       scene.remove(line);
     }
     lines = [];
