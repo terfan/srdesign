@@ -402,6 +402,7 @@ function draw(line, debugMode, newLine) {
       //TODO socket emit new starting pos?
       camera.updateMatrixWorld(); //???
       var direction = camera.getWorldDirection();
+      console.log('direction: '+direction.x+' '+direction.y+' '+direction.z);
       socket.emit('move_gaze', { gaze: direction } );
     } else {
       continueLine(line, debugMode);
@@ -430,11 +431,8 @@ function continueLine(line, debugMode) {
     var scale_z = 1; // TODO
 
     points.push( geometry );
-
     materials.push(material);
-    //console.log('LOOK HERE '+points.length);
-    /*for (var i = 0; i < points.length; i++) {
-    var line = new THREE.Line( points[i], materials[i] );*/
+
     var line = new THREE.Line( geometry, material );
     if (debugMode) {
       line.scale.set(scale_x, scale_y, scale_z);

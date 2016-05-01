@@ -123,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
       function move(changeX, changeY, changeZ) {
          return {
-            x: line.x + changeX,
-            y: line.y + changeY,
-            z: line.z + changeZ
+            x: brush.pos.x + changeX,
+            y: brush.pos.y + changeY,
+            z: brush.pos.z + changeZ
          };
       }
    }
@@ -143,27 +143,27 @@ document.addEventListener("DOMContentLoaded", function() {
       vz += aForward;
 
       var x = y = z = 0;
-      x = brush.pos.x + vx;
-      y = brush.pos.y + vy;
-      z = brush.pos.z + vz;
-      if (x > 699) {
-         x = 699;
-      }
-      if (y > 699) {
-         y = 699;
-      }
-      if (z = 699) {
-         z = 699;
-      }
-
       var ret = move(vx, vy, -vz); // reflect z coordinates
-      brush.pos.x = ret.x;
-      brush.pos.y = ret.y;
-      brush.pos.z = ret.z;
+
+      var xmax = cameraPos.x + 100;
+      var ymax = cameraPos.y + 100;
+      var zmax = cameraPos.z + 100;
+
+      x = clamp(ret.x, -xmax, xmax);
+      y = clamp(ret.y, -ymax, ymax);
+      z = clamp(ret.z, -zmax, zmax);
+
+      brush.pos.x = x;
+      brush.pos.y = y;
+      brush.pos.z = z;
       
       socket.emit('draw_line', { line: [ brush.pos, brush.pos_prev, brush.color, brush.thickness ], debug: debugMode, newLine: touchReleased });
       brush.pos_prev = {x: brush.pos.x, y: brush.pos.y, z: brush.pos.z};
       touchReleased = false;
+   }
+
+   function clamp(num, min, max) {
+      return num < min ? min : num > max ? max : num;
    }
 
    socket.on('move_gaze', function (data) {
