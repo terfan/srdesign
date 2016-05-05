@@ -134,10 +134,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
       aRight = e.acceleration.x * sensitivity;
       // assuming phone is being held flat (screen-up)
-      aUp = e.acceleration.z * sensitivity;
-      aForward = e.acceleration.y * sensitivity;
-      //aUp = e.acceleration.y * sensitivity;
-      //aForward = e.acceleration.z * sensitivity;
+      //aUp = e.acceleration.z * sensitivity;
+      //aForward = e.acceleration.y * sensitivity;
+      aUp = e.acceleration.y * sensitivity;
+      aForward = e.acceleration.z * sensitivity;
 
       vx += aRight;
       vy += aUp;
