@@ -455,7 +455,7 @@ function continueLine(line, debugMode) {
     materials.push(material);
 
     var line = new THREE.Line( geometry, material );
-    line.scale.set(0.75, 0.75, 0.75);
+    //line.scale.set(0.5, 0.75, 0.75);
     if (debugMode) {
       line.scale.set(scale_x, scale_y, scale_z);
       line.rotateX(Math.PI);
