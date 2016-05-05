@@ -36,11 +36,11 @@ var buttons = {
     // TODO: color
     lineColor = Math.random() * 0xffffff;
     socket.emit('change_color', { color: lineColor } );
-    console.log("color changed to "+lineColor);
   },
   'Exit': function () {
     // TODO: show warning message and/or option to save?
-    window.history.back();
+    //window.history.back();
+    window.open('https://cardboardcanvas.herokuapp.com', '_self');
   },
   'Clear': function () {
     socket.emit('clear');
@@ -50,15 +50,11 @@ var buttons = {
     lines = [];
   },
   'Undo': function () {
-    console.log('before undo '+lines.length);
-
     socket.emit('undo');
     var diff = lines.length - newLineIndex;
     for (var i = 0; i <= diff; i++) {
       scene.remove(lines.pop());
     }
-    //scene.remove(points.pop());
-        console.log('after undo '+lines.length);
   },
   'Thickness': function () {
     // TODO: brush thickness
