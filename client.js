@@ -10,7 +10,7 @@ var brush = {
 var touchReleased = false;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
-var sensitivity = 0.2; //0.2?
+var sensitivity = 0.05; //0.2?
 var cameraPos = new THREE.Vector3(10, 20, 40);
 
 document.addEventListener("DOMContentLoaded", function() {
