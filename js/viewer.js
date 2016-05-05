@@ -463,5 +463,6 @@ function continueLine(line, debugMode) {
     lines.push(line);
     console.log('adding line');
     scene.add(line);
+    render();
 }
 
