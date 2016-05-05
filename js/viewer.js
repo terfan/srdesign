@@ -202,6 +202,11 @@ py.vertices.push(
   scene.add(menuGroup);
   //highlightButton(4, true);
 
+  if (annyang) {
+    annyang.addCommands(buttons);
+    annyang.start();
+  }
+
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
 
