@@ -233,7 +233,7 @@ function update(dt) {
 }
 
 function render() {
-  //geometry.verticesNeedUpdate = true; // unnecessary?
+  geometry.verticesNeedUpdate = true; // unnecessary?
   effect.render(scene, camera);
 }
 
