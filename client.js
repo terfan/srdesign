@@ -10,7 +10,7 @@ var brush = {
 var touchReleased = false;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
-var sensitivity = 0.01; //0.2?
+var sensitivity = 0.05; //0.2?
 var cameraPos = new THREE.Vector3(10, 20, 40);
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -168,10 +168,10 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    socket.on('move_gaze', function (data) {
-      brush.pos.x = data.gaze.x * 40 + cameraPos.x;
+      /*brush.pos.x = data.gaze.x * 40 + cameraPos.x;
       brush.pos.y = data.gaze.y * 40 + cameraPos.y;
       brush.pos.z = data.gaze.z * 40 + cameraPos.z;
-      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
+      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;*/
    });
    
    // received color change signal from menu
