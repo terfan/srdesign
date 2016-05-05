@@ -394,6 +394,7 @@ var materials = [];
 var geometry = new THREE.Geometry();
 var prevPoint = new THREE.Vector3();
 var newLineIndex = 0; // index of the last new line
+var line;
 
 function draw(line, debugMode, newLine) {
 
@@ -410,6 +411,7 @@ function draw(line, debugMode, newLine) {
     if (p2.equals(prevPoint)) { // continuing a line
       continueLine(line, debugMode);
     } else {
+      scene.add(line);
       //console.log('detected new line');
       geometry = new THREE.Geometry();
       var direction = camera.getWorldDirection();
@@ -454,15 +456,17 @@ function continueLine(line, debugMode) {
     points.push( geometry );
     materials.push(material);
 
-    var line = new THREE.Line( geometry, material );
-    //line.scale.set(0.5, 0.75, 0.75);
+geometry.verticesNeedUpdate = true;
+line = new THREE.Line( geometry, material );
+    //var line = new THREE.Line( geometry, material );
+
     if (debugMode) {
       line.scale.set(scale_x, scale_y, scale_z);
       line.rotateX(Math.PI);
       line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
     }
-    lines.push(line);
+    //lines.push(line);
     //console.log('adding line');
-    scene.add(line);
+    //scene.add(line);
 }
 

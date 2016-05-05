@@ -168,10 +168,10 @@ document.addEventListener("DOMContentLoaded", function() {
    }
 
    socket.on('move_gaze', function (data) {
-      /*brush.pos.x = data.gaze.x * 40 + cameraPos.x;
+      brush.pos.x = data.gaze.x * 40 + cameraPos.x;
       brush.pos.y = data.gaze.y * 40 + cameraPos.y;
       brush.pos.z = data.gaze.z * 40 + cameraPos.z;
-      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;*/
+      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    
    // received color change signal from menu
