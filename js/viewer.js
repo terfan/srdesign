@@ -26,6 +26,8 @@ var selectedTextures = []; // textures to use when button is selected
 var selectedButton;
 var lineColor, lineThickness;
 var lines = [];
+var backgroundMat; // background material
+var sky_material;
 
 var buttons = {
   /*'Brush': function () {
@@ -145,7 +147,11 @@ function init() {
   var light = new THREE.HemisphereLight(0x777777, 0x000000, 0.6);
   scene.add(light);
 
-  var texture = new THREE.TextureLoader().load('images/textures/patterns/checker.png');
+  initBackgrounds();
+  addBackground('sky');
+
+  // floor
+  /*var texture = new THREE.TextureLoader().load('images/textures/patterns/checker.png');
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat = new THREE.Vector2(50, 50);
@@ -163,7 +169,7 @@ function init() {
 
   var mesh = new THREE.Mesh(geometry, material);
   mesh.rotation.x = -Math.PI / 2;
-  //scene.add(mesh);
+  scene.add(mesh);*/
 
   /** AXES FOR TESTING **/
     var material2 = new THREE.LineBasicMaterial({
@@ -211,6 +217,49 @@ py.vertices.push(
   setTimeout(resize, 1);
 
   //setInterval(render, 1000/30);
+}
+
+function initBackgrounds() {
+  var format, textureCube, shader, mesh;
+
+  var skyPath = "images/textures/sky/";
+  var format = '.jpg';
+  var urls = [
+    skyPath + 'px' + format, skyPath + 'nx' + format,
+    skyPath + 'py' + format, skyPath + 'ny' + format,
+    skyPath + 'pz' + format, skyPath + 'nz' + format
+  ];
+  var textureCube = new THREE.CubeTextureLoader().load( urls , 
+    function (texture) {
+        sky_material = new THREE.ShaderMaterial( {
+          fragmentShader: skyShader.fragmentShader,
+          vertexShader: skyShader.vertexShader,
+          uniforms: skyShader.uniforms,
+          side: THREE.BackSide,
+          name:'blah'
+        } ),
+  mesh = new THREE.Mesh( new THREE.BoxGeometry( 100000, 100000, 100000 ), sky_material );
+  scene.add( mesh );
+  console.log('loaded '+mesh.material.name);
+    } );
+  textureCube.mapping = THREE.CubeRefractionMapping;
+  var skyShader = THREE.ShaderLib[ "cube"];
+  skyShader.uniforms[ "tCube" ].value = textureCube;
+
+}
+
+function addBackground(bg) {
+  switch(bg) {
+    case 'black':
+      break;
+    case 'white':
+      break;
+    case 'sky':
+      backgroundMat = sky_material;
+      break;
+    default:
+
+  }
 }
 
 function resize() {
@@ -299,6 +348,8 @@ function createMenu() {
     var texture2 = new THREE.Texture(bitmap2);
     texture1.needsUpdate = true;
     texture2.needsUpdate = true;
+    texture1.minFilter = THREE.LinearFilter; // gets rid of "power of two" complaint
+    texture2.minFilter = THREE.LinearFilter;
     textures[i] = texture1;
     selectedTextures[i] = texture2;
 
