@@ -19,7 +19,7 @@ var raycaster = new THREE.Raycaster();
 var element, container;
 var menuGroup;
 var sides = 5;
-var menuText = ['Brush', 'Exit', 'Clear', 'Thickness', 'Color'];
+var menuText = ['Color', 'Exit', 'Clear', 'Undo', 'Thickness'];
 var menuButtons = []; // geometry planes
 var textures = []; // normal button textures
 var selectedTextures = []; // textures to use when button is selected
@@ -28,9 +28,15 @@ var lineColor, lineThickness;
 var lines = [];
 
 var buttons = {
-  'Brush': function () {
+  /*'Brush': function () {
     // TODO: brush styles
     console.log("brush menu item clicked");
+  },*/
+  'Color': function () {
+    // TODO: color
+    lineColor = Math.random() * 0xffffff;
+    socket.emit('change_color', { color: lineColor } );
+    console.log("color changed to "+lineColor);
   },
   'Exit': function () {
     // TODO: show warning message and/or option to save?
@@ -38,11 +44,14 @@ var buttons = {
   },
   'Clear': function () {
     socket.emit('clear');
-    //location.reload(false);
     for (var i = 0; i < lines.length; i++) {
       scene.remove(lines[i]);
     }
     lines = [];
+  },
+  'Undo': function () {
+    socket.emit('undo');
+    scene.remove(lines.pop());
   },
   'Thickness': function () {
     // TODO: brush thickness
@@ -51,12 +60,6 @@ var buttons = {
     lineThickness = Math.floor(Math.random() * (max - min + 1)) + min;
     socket.emit('change_thickness', { thickness: lineThickness } );
     console.log("thickness changed to "+lineThickness);
-  },
-  'Color': function () {
-    // TODO: color
-    lineColor = Math.random() * 0xffffff;
-    socket.emit('change_color', { color: lineColor } );
-    console.log("color changed to "+lineColor);
   }
 
 }

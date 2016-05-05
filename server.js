@@ -45,8 +45,11 @@ io.on('connection', function (socket) {
     io.emit('change_thickness', { thickness: data.thickness });
   });
 
+  socket.on('undo', function () {
+    line_history.pop();
+  });
+
   socket.on('clear', function () {
-    console.log('clear');
     line_history = [];
     debug_history = [];
     newLine_history = [];
