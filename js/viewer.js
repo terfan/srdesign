@@ -50,11 +50,15 @@ var buttons = {
     lines = [];
   },
   'Undo': function () {
-            console.log('before undo '+points.length);
+    console.log('before undo '+lines.length);
 
     socket.emit('undo');
-    scene.remove(points.pop());
-        console.log('after undo '+points.length);
+    var diff = lines.length - newLineIndex;
+    for (var i = 0; i <= diff; i++) {
+      scene.remove(lines.pop());
+    }
+    //scene.remove(points.pop());
+        console.log('after undo '+lines.length);
   },
   'Thickness': function () {
     // TODO: brush thickness
@@ -385,6 +389,7 @@ var points = [];
 var materials = [];
 var geometry = new THREE.Geometry();
 var prevPoint = new THREE.Vector3();
+var newLineIndex = 0; // index of the last new line
 
 function draw(line, debugMode, newLine) {
 
@@ -409,6 +414,7 @@ function draw(line, debugMode, newLine) {
   } else {
     if (newLine) {
       //console.log('detected new line');
+      newLineIndex = lines.length;
       geometry = new THREE.Geometry();
       //TODO socket emit new starting pos?
       camera.updateMatrixWorld(); //???
