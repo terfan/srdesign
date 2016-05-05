@@ -50,11 +50,11 @@ var buttons = {
     lines = [];
   },
   'Undo': function () {
-            console.log('before undo '+lines.length);
+            console.log('before undo '+points.length);
 
     socket.emit('undo');
-    scene.remove(lines.pop());
-        console.log('after undo '+lines.length);
+    scene.remove(points.pop());
+        console.log('after undo '+points.length);
   },
   'Thickness': function () {
     // TODO: brush thickness
@@ -451,6 +451,7 @@ function continueLine(line, debugMode) {
       line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
     }
     lines.push(line);
+    console.log('adding line');
     scene.add(line);
 }
 
