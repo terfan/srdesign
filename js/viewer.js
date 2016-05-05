@@ -233,7 +233,6 @@ function update(dt) {
 }
 
 function render() {
-  geometry.verticesNeedUpdate = true; // unnecessary?
   effect.render(scene, camera);
 }
 
@@ -453,6 +452,7 @@ function continueLine(line, debugMode) {
 
     points.push( geometry );
     materials.push(material);
+    geometry.verticesNeedUpdate = true; // unnecessary?
 
     var line = new THREE.Line( geometry, material );
 
