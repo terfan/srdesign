@@ -50,8 +50,11 @@ var buttons = {
     lines = [];
   },
   'Undo': function () {
+            console.log('before undo '+lines.length);
+
     socket.emit('undo');
     scene.remove(lines.pop());
+        console.log('after undo '+lines.length);
   },
   'Thickness': function () {
     // TODO: brush thickness
