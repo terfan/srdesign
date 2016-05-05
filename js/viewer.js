@@ -211,7 +211,7 @@ py.vertices.push(
   window.addEventListener('resize', resize, false);
   setTimeout(resize, 1);
 
-  //setInterval(render, 1000/30);
+  setInterval(render, 1000/30);
 }
 
 function resize() {
@@ -461,8 +461,7 @@ function continueLine(line, debugMode) {
       line.translateOnAxis(new THREE.Vector3(0, -1, 0), scale_y);     
     }
     lines.push(line);
-    console.log('adding line');
+    //console.log('adding line');
     scene.add(line);
-    render();
 }
 
