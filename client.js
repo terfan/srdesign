@@ -10,7 +10,7 @@ var brush = {
 var touchReleased = false;
 var vx = vy = vz = 0;
 var aRight = aUp = aForward = 0;
-var sensitivity = 0.3; //0.2?
+var sensitivity = 0.5; //0.2?
 var cameraPos = new THREE.Vector3(10, 20, 40);
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -134,10 +134,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
       aRight = e.acceleration.x * sensitivity;
       // assuming phone is being held flat (screen-up)
-      //aUp = e.acceleration.z * sensitivity;
-      //aForward = e.acceleration.y * sensitivity;
-      aUp = e.acceleration.y * sensitivity;
-      aForward = e.acceleration.z * sensitivity;
+      aUp = e.acceleration.z * sensitivity;
+      aForward = e.acceleration.y * sensitivity;
+      //aUp = e.acceleration.y * sensitivity;
+      //aForward = e.acceleration.z * sensitivity;
 
       vx += aRight;
       vy += aUp;
