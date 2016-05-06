@@ -30,7 +30,7 @@ var lines = [];
 var buttons = {
   /*'Brush': function () {
     // TODO: brush styles
-    console.log("brush menu item clicked");
+    console.log("brush menu item clicked");j
   },*/
   'Color': function () {
     // TODO: color
