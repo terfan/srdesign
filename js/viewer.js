@@ -423,7 +423,7 @@ function draw(line, debugMode, newLine) {
       //TODO socket emit new starting pos?
       camera.updateMatrixWorld(); //???
       var direction = camera.getWorldDirection();
-      console.log('direction: '+direction.x+' '+direction.y+' '+direction.z);
+      //console.log('direction: '+direction.x+' '+direction.y+' '+direction.z);
       socket.emit('move_gaze', { gaze: direction } );
     } else {
       continueLine(line, debugMode);
