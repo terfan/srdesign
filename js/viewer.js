@@ -81,7 +81,7 @@ function init() {
 
   scene = new THREE.Scene();
 
-  effect = new THREE.CardboardEffect(renderer);
+  //effect = new THREE.CardboardEffect(renderer);
 
   camera = new THREE.PerspectiveCamera(90, 1, 0.001, 700);
   camera.position.set(10, 20, 40); // TODO: play around with camera stuff
@@ -222,7 +222,7 @@ function resize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(width, height);
-  effect.setSize(width, height);
+  //effect.setSize(width, height);
 }
 
 function update(dt) {
@@ -233,7 +233,8 @@ function update(dt) {
 }
 
 function render() {
-  effect.render(scene, camera);
+  //effect.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
 function animate(t) {
