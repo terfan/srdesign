@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
    
    } else { // drawing by phone motion
       canvas.addEventListener('touchstart', function(e) {
-                        document.getElementById('msg').innerHTML = 'detected touchstart';
+                        //document.getElementById('msg').innerHTML = 'detected touchstart';
 
          // If there's exactly one finger inside this element
          if (e.targetTouches.length == 1) {
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
       brush.pos.x = data.gaze.x * 40 + cameraPos.x;
       brush.pos.y = data.gaze.y * 40 + cameraPos.y;
       brush.pos.z = data.gaze.z * 40 + cameraPos.z;
-      document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
+      //document.getElementById('msg').innerHTML = brush.pos.x + " " + brush.pos.y + " " + brush.pos.z;
    });
    
    // received color change signal from menu
